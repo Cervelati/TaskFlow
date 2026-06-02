@@ -427,3 +427,14 @@ FodyWeavers.xsd
 *.msix
 *.msm
 *.msp
+
+# Java / Maven
+target/
+.idea/
+*.class
+*.jar
+*.war
+
+# Sistema operacional
+.DS_Store
+Thumbs.db
