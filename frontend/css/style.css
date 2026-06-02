@@ -1,0 +1,18 @@
+/* Faz a barra lateral e o conteúdo principal ficarem lado a lado */
+.main-container {
+    display: flex;
+    height: calc(100vh - 48px); /* Ocupa a tela inteira descontando a altura do header */
+}
+
+/* A barra lateral tem tamanho fixo */
+.sidebar {
+    width: 240px;
+    background-color: #f1f2f4;
+}
+
+/* O conteúdo principal ocupa todo o resto do espaço */
+.dashboard-content {
+    flex-grow: 1;
+    padding: 16px;
+    background-color: #ffffff;
+}
