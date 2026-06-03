@@ -438,3 +438,30 @@ target/
 # Sistema operacional
 .DS_Store
 Thumbs.db
+
+# ==========================================
+# TaskFlow - Adições específicas do projeto
+# ==========================================
+
+# Configs sensíveis ASP.NET
+appsettings.Development.json
+appsettings.local.json
+appsettings.*.local.json
+
+# Docker
+docker-compose.override.yml
+
+# Frontend build outputs
+frontend/dist/
+frontend/build/
+frontend/.next/
+frontend/.nuxt/
+
+# Secrets e certificados
+*.pfx
+*.p12
+secrets.json
+
+.env
+.env.local
+!.env.example 
