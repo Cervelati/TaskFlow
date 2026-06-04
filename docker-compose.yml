@@ -16,27 +16,21 @@ services:
       - postgres_data:/var/lib/postgresql/data
 
   backend-api:
-    build: ./backend-api
-    container_name: taskflow-api
-    environment:
-      - ASPNETCORE_ENVIRONMENT=Development
-      - ConnectionStrings__DefaultConnection=Host=postgres;Database=${POSTGRES_DB};Username=${POSTGRES_USER};Password=${POSTGRES_PASSWORD}
-    ports:
-      - "5000:8080"
-    depends_on:
-      - postgres
+    build:
+      context: ./backend-api/TaskFlow.Api
+      dockerfile: Dockerfile
 
-  notification-service:
-    build: ./notification-service
-    container_name: taskflow-notifications
-    environment:
-      - SPRING_DATASOURCE_URL=jdbc:postgresql://postgres:5432/${POSTGRES_DB}
-      - SPRING_DATASOURCE_USERNAME=${POSTGRES_USER}
-      - SPRING_DATASOURCE_PASSWORD=${POSTGRES_PASSWORD}
-    ports:
-      - "8080:8080"
-    depends_on:
-      - postgres
+# notification-service:
+  #   build: ./notification-service
+  #   container_name: taskflow-notifications
+  #   environment:
+  #     - SPRING_DATASOURCE_URL=jdbc:postgresql://postgres:5432/${POSTGRES_DB}
+  #     - SPRING_DATASOURCE_USERNAME=${POSTGRES_USER}
+  #     - SPRING_DATASOURCE_PASSWORD=${POSTGRES_PASSWORD}
+  #   ports:
+  #     - "8080:8080"
+  #   depends_on:
+  #     - postgres
 
   frontend:
     image: nginx:alpine

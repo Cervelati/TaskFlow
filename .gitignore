@@ -465,3 +465,4 @@ secrets.json
 .env
 .env.local
 !.env.example 
+.vscode/
