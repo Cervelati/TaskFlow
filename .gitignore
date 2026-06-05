@@ -466,3 +466,5 @@ secrets.json
 .env.local
 !.env.example 
 .vscode/
+*.sql
+changes.txt
