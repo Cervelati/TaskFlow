@@ -1,6 +1,25 @@
-@TaskFlow.Api_HostAddress = http://localhost:5296
+@TaskFlow.Api_HostAddress = http://localhost:5000
 
-GET {{TaskFlow.Api_HostAddress}}/weatherforecast/
+### Register
+POST {{TaskFlow.Api_HostAddress}}/api/auth/register
+Content-Type: application/json
+
+{
+  "name": "Teste User",
+  "email": "teste@taskflow.com",
+  "password": "Senha123"
+}
+
+### Login
+POST {{TaskFlow.Api_HostAddress}}/api/auth/login
+Content-Type: application/json
+
+{
+  "email": "teste@taskflow.com",
+  "password": "Senha123"
+}
+
+### Get Tasks
+GET {{TaskFlow.Api_HostAddress}}/api/tasks
 Accept: application/json
-
-###
+Authorization: Bearer SEU_TOKEN_AQUI
