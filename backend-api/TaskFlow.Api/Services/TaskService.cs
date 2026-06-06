@@ -8,10 +8,12 @@ namespace TaskFlow.Api.Services;
 public class TaskService
 {
     private readonly AppDbContext _db;
+    private readonly NotificationClient _notificationClient;
 
-    public TaskService(AppDbContext db)
+    public TaskService(AppDbContext db, NotificationClient notificationClient)
     {
         _db = db;
+        _notificationClient = notificationClient;
     }
 
     public async Task<List<TaskResponse>> GetAllAsync(int userId)
@@ -43,6 +45,8 @@ public class TaskService
 
         _db.TaskItems.Add(task);
         await _db.SaveChangesAsync();
+
+        await _notificationClient.SendTaskCreatedAsync(userId, task.Id, task.Title);
 
         return ToResponse(task);
     }

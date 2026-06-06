@@ -16,6 +16,12 @@ builder.Services.AddDbContext<AppDbContext>(options =>
 builder.Services.AddScoped<AuthService>();
 builder.Services.AddScoped<TaskService>();
 
+// ── HTTP Clients
+builder.Services.AddHttpClient<NotificationClient>(client =>
+{
+    client.BaseAddress = new Uri(builder.Configuration["Services:NotificationUrl"] ?? "http://localhost:8080");
+});
+
 // ── JWT
 var jwtKey = builder.Configuration["Jwt:Key"]!;
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
