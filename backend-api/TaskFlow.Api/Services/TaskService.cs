@@ -16,12 +16,25 @@ public class TaskService
         _notificationClient = notificationClient;
     }
 
-    public async Task<List<TaskResponse>> GetAllAsync(int userId)
+    // Retorna tarefas pessoais (sem workspace) ou de um workspace específico
+    public async Task<List<TaskResponse>> GetAllAsync(int userId, Guid? workspaceId = null)
     {
+        if (workspaceId.HasValue)
+        {
+            var isMember = await _db.TaskItems
+                .OfType<WorkspaceMember>() // ou _db.WorkspaceMembers se disponível
+                .AnyAsync(m => m.WorkspaceId == workspaceId && m.UserId == userId);
+
+            if (!isMember) return new List<TaskResponse>();
+        }
+
         return await _db.TaskItems
-            .Where(t => t.UserId == userId)
+            .Where(t => t.UserId == userId && t.WorkspaceId == workspaceId)
             .OrderByDescending(t => t.CreatedAt)
-            .Select(t => ToResponse(t))
+            .Select(t => new TaskResponse(
+                t.Id, t.Title, t.Description,
+                t.IsCompleted, t.CreatedAt, t.DueDate, t.UserId
+            ))
             .ToListAsync();
     }
 
@@ -35,12 +48,24 @@ public class TaskService
 
     public async Task<TaskResponse> CreateAsync(CreateTaskRequest request, int userId)
     {
+        // Valida acesso ao workspace, se fornecido
+        if (request.WorkspaceId.HasValue)
+        {
+            var isMember = await _db.WorkspaceMembers
+                .AnyAsync(m => m.WorkspaceId == request.WorkspaceId && m.UserId == userId);
+
+            if (!isMember)
+                throw new UnauthorizedAccessException("Sem acesso ao workspace.");
+        }
+
         var task = new TaskItem
         {
             Title = request.Title,
             Description = request.Description,
             DueDate = request.DueDate,
-            UserId = userId
+            Status = request.Status ?? "Todo",
+            UserId = userId,
+            WorkspaceId = request.WorkspaceId // null = tarefa pessoal
         };
 
         _db.TaskItems.Add(task);
@@ -62,6 +87,7 @@ public class TaskService
         task.Description = request.Description;
         task.IsCompleted = request.IsCompleted;
         task.DueDate = request.DueDate;
+        task.UpdatedAt = DateTime.UtcNow;
 
         await _db.SaveChangesAsync();
 

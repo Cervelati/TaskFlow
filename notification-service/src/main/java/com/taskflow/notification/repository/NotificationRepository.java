@@ -9,6 +9,13 @@ import java.util.List;
 @Repository
 public interface NotificationRepository extends JpaRepository<Notification, Long> {
 
+    // Pendentes de envio por e-mail
     List<Notification> findBySentFalse();
-    List<Notification> findByUserIdAndSentFalse(Long userId);
+
+    // ── NOVOS: usados pelo NotificationService
+    List<Notification> findByUserIdOrderByCreatedAtDesc(Long userId);
+
+    List<Notification> findByUserIdAndReadFalse(Long userId);
+
+    long countByUserIdAndReadFalse(Long userId);
 }

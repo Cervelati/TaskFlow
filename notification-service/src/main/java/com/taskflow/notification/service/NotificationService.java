@@ -14,9 +14,10 @@ import java.util.List;
 @RequiredArgsConstructor
 public class NotificationService {
 
-    private final NotificationRepository repository;
+    private final NotificationRepository notificationRepository;
     private final EmailService emailService;
 
+    // ── Cria uma nova notificação
     public Notification create(Long userId, Long taskId, String type, String message) {
         Notification notification = new Notification();
         notification.setUserId(userId);
@@ -24,26 +25,74 @@ public class NotificationService {
         notification.setType(type);
         notification.setMessage(message);
         notification.setSent(false);
-        return repository.save(notification);
+        notification.setRead(false);
+        notification.setCreatedAt(LocalDateTime.now());
+        return notificationRepository.save(notification);
     }
 
-    public void processPending() {
-        List<Notification> pending = repository.findBySentFalse();
-        log.info("Processando {} notificações pendentes", pending.size());
+    // ── NOVO: Lista todas as notificações de um usuário (mais recentes primeiro)
+    public List<Notification> getByUser(Long userId) {
+        return notificationRepository.findByUserIdOrderByCreatedAtDesc(userId);
+    }
 
-        for (Notification notification : pending) {
+    // ── NOVO: Conta notificações não lidas de um usuário
+    public long countUnread(Long userId) {
+        return notificationRepository.countByUserIdAndReadFalse(userId);
+    }
+
+    // ── NOVO: Marca uma notificação como lida
+    public Notification markAsRead(Long id) {
+        Notification notification = notificationRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Notificação não encontrada: " + id));
+        notification.setRead(true);
+        notification.setReadAt(LocalDateTime.now());
+        return notificationRepository.save(notification);
+    }
+
+    // ── NOVO: Marca todas as notificações de um usuário como lidas
+    public void markAllAsRead(Long userId) {
+        List<Notification> unread = notificationRepository.findByUserIdAndReadFalse(userId);
+        unread.forEach(n -> {
+            n.setRead(true);
+            n.setReadAt(LocalDateTime.now());
+        });
+        notificationRepository.saveAll(unread);
+    }
+
+    // ── Processa e envia e-mails para notificações pendentes
+    public void processPending() {
+        List<Notification> pending = notificationRepository.findBySentFalse();
+        log.info("Processando {} notificações pendentes...", pending.size());
+
+        for (Notification n : pending) {
             try {
+                String subject = buildSubject(n.getType());
                 emailService.sendEmail(
-                    "user@taskflow.com",
-                    "[TaskFlow] " + notification.getType(),
-                    notification.getMessage()
+                    resolveUserEmail(n.getUserId()),
+                    subject,
+                    n.getMessage()
                 );
-                notification.setSent(true);
-                notification.setSentAt(LocalDateTime.now());
-                repository.save(notification);
+                n.setSent(true);
+                n.setSentAt(LocalDateTime.now());
+                notificationRepository.save(n);
             } catch (Exception e) {
-                log.error("Erro ao processar notificação {}: {}", notification.getId(), e.getMessage());
+                log.error("Erro ao processar notificação {}: {}", n.getId(), e.getMessage());
             }
         }
+    }
+
+    private String buildSubject(String type) {
+        return switch (type) {
+            case "TASK_CREATED"  -> "[TaskFlow] Nova tarefa criada";
+            case "TASK_UPDATED"  -> "[TaskFlow] Tarefa atualizada";
+            case "TASK_DONE"     -> "[TaskFlow] Tarefa concluída";
+            case "TASK_DEADLINE" -> "[TaskFlow] Prazo se aproximando";
+            default              -> "[TaskFlow] Notificação";
+        };
+    }
+
+    // Substitua por uma busca real ao seu UserRepository
+    private String resolveUserEmail(Long userId) {
+        return "usuario@exemplo.com";
     }
 }

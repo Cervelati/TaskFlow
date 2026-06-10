@@ -15,6 +15,8 @@ builder.Services.AddDbContext<AppDbContext>(options =>
 // ── Services
 builder.Services.AddScoped<AuthService>();
 builder.Services.AddScoped<TaskService>();
+builder.Services.AddScoped<WorkspaceService>();
+builder.Services.AddScoped<InviteService>();
 
 // ── HTTP Clients
 builder.Services.AddHttpClient<NotificationClient>(client =>

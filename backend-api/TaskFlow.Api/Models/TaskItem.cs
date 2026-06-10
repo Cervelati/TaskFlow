@@ -11,4 +11,8 @@ public class TaskItem
 
     public int UserId { get; set; }
     public User User { get; set; } = null!;
+
+    // Nullable — null = tarefa pessoal, preenchido = tarefa do workspace
+    public int? WorkspaceId { get; set; }
+    public Workspace? Workspace { get; set; }
 }

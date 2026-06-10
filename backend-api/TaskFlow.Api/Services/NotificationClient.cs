@@ -37,4 +37,36 @@ public class NotificationClient
             _logger.LogError("Erro ao notificar tarefa {TaskId}: {Error}", taskId, ex.Message);
         }
     }
+    public async Task SendInviteEmailAsync(string toEmail, string workspaceName, string inviteLink, DateTime expiresAt)
+    {
+        try
+        {
+            var payload = new
+            {
+                to = toEmail,
+                subject = $"Você foi convidado para o workspace \"{workspaceName}\" no TaskFlow",
+                body = $"""
+                Olá!
+
+                Você recebeu um convite para colaborar no workspace "{workspaceName}" no TaskFlow.
+
+                Clique no link abaixo para aceitar o convite:
+                {inviteLink}
+
+                Este convite expira em {expiresAt:dd/MM/yyyy HH:mm} UTC.
+
+                Se você não esperava este convite, pode ignorar este e-mail.
+
+                — Equipe TaskFlow
+                """
+            };
+
+            await _httpClient.PostAsJsonAsync("/notify/email", payload);
+        }
+        catch (Exception ex)
+        {
+            // Log sem quebrar o fluxo principal
+            Console.WriteLine($"[NotificationClient] Falha ao enviar convite: {ex.Message}");
+        }
+    }
 }

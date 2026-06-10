@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>TaskFlow — Entrar</title>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="assets/css/login.css">
+</head>
+<body>
+
+  <div class="auth-container">
+
+    <!-- LEFT PANEL -->
+    <div class="auth-left">
+      <a class="nav-logo" href="index.html">
+        <div class="logo-icon">
+          <div class="logo-col"></div>
+          <div class="logo-col"></div>
+          <div class="logo-col"></div>
+        </div>
+        TaskFlow
+      </a>
+
+      <div class="auth-card">
+        <!-- TABS -->
+        <div class="auth-tabs">
+          <button class="tab active" id="tab-login" onclick="switchTab('login')">Entrar</button>
+          <button class="tab" id="tab-register" onclick="switchTab('register')">Cadastrar</button>
+        </div>
+
+        <!-- LOGIN FORM -->
+        <div class="form-section" id="form-login">
+          <h2 class="form-title">Bem-vindo de volta!</h2>
+          <p class="form-sub">Entre com sua conta para continuar.</p>
+
+          <div class="form-group">
+            <label>E-mail</label>
+            <input type="email" id="login-email" placeholder="seu@email.com" />
+          </div>
+
+          <div class="form-group">
+            <label>Senha</label>
+            <input type="password" id="login-password" placeholder="••••••••" />
+          </div>
+
+          <div id="login-error" class="error-msg"></div>
+
+          <button class="btn-submit" onclick="handleLogin()">
+            <span id="login-btn-text">Entrar</span>
+            <div id="login-spinner" class="spinner hidden"></div>
+          </button>
+
+          <p class="form-switch">Não tem conta? <a href="#" onclick="switchTab('register')">Cadastre-se grátis</a></p>
+        </div>
+
+        <!-- REGISTER FORM -->
+        <div class="form-section hidden" id="form-register">
+          <h2 class="form-title">Crie sua conta</h2>
+          <p class="form-sub">Grátis para sempre. Sem cartão de crédito.</p>
+
+          <div class="form-group">
+            <label>Nome completo</label>
+            <input type="text" id="register-name" placeholder="João Silva" />
+          </div>
+
+          <div class="form-group">
+            <label>E-mail</label>
+            <input type="email" id="register-email" placeholder="seu@email.com" />
+          </div>
+
+          <div class="form-group">
+            <label>Senha</label>
+            <input type="password" id="register-password" placeholder="Mínimo 6 caracteres" />
+          </div>
+
+          <div id="register-error" class="error-msg"></div>
+
+          <button class="btn-submit" onclick="handleRegister()">
+            <span id="register-btn-text">Criar conta grátis</span>
+            <div id="register-spinner" class="spinner hidden"></div>
+          </button>
+
+          <p class="form-switch">Já tem conta? <a href="#" onclick="switchTab('login')">Entrar</a></p>
+        </div>
+      </div>
+    </div>
+
+    <!-- RIGHT PANEL -->
+    <div class="auth-right">
+      <div class="auth-right-content">
+        <div class="testimonial-card">
+          <div class="stars">★★★★★</div>
+          <p class="testimonial-text">"O TaskFlow transformou a forma como nossa equipe trabalha. Tudo organizado, nada perdido."</p>
+          <div class="testimonial-author">
+            <div class="testimonial-avatar">ML</div>
+            <div>
+              <div class="testimonial-name">Maria Lima</div>
+              <div class="testimonial-role">Product Manager · Acme Corp</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="stats-row">
+          <div class="stat">
+            <div class="stat-number">10k+</div>
+            <div class="stat-label">Usuários ativos</div>
+          </div>
+          <div class="stat">
+            <div class="stat-number">98%</div>
+            <div class="stat-label">Satisfação</div>
+          </div>
+          <div class="stat">
+            <div class="stat-number">500k+</div>
+            <div class="stat-label">Tarefas criadas</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <script src="assets/js/login.js"></script>
+</body>
+</html>
