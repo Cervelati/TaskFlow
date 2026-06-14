@@ -18,11 +18,9 @@ public class InviteService
         _config = config;
     }
 
-    // ── Criar e enviar convite ─────────────────────────────
     public async Task<(InviteResponseDto? invite, string? error)> CreateInviteAsync(
-        Guid workspaceId, int invitedByUserId, CreateInviteDto dto)
+        int workspaceId, int invitedByUserId, CreateInviteDto dto)
     {
-        // Verificar permissão
         var requester = await _db.WorkspaceMembers
             .Include(m => m.Workspace)
             .FirstOrDefaultAsync(m => m.WorkspaceId == workspaceId && m.UserId == invitedByUserId);
@@ -30,7 +28,6 @@ public class InviteService
         if (requester == null || (requester.Role != "Owner" && requester.Role != "Admin"))
             return (null, "Sem permissão para convidar membros.");
 
-        // Verificar se o e-mail já é membro
         var alreadyMember = await _db.WorkspaceMembers
             .Include(m => m.User)
             .AnyAsync(m => m.WorkspaceId == workspaceId && m.User.Email == dto.Email);
@@ -38,7 +35,6 @@ public class InviteService
         if (alreadyMember)
             return (null, "Este usuário já é membro do workspace.");
 
-        // Verificar convite pendente
         var existingInvite = await _db.Invites
             .FirstOrDefaultAsync(i =>
                 i.WorkspaceId == workspaceId &&
@@ -54,7 +50,7 @@ public class InviteService
             WorkspaceId = workspaceId,
             InvitedByUserId = invitedByUserId,
             Email = dto.Email.ToLower().Trim(),
-            Token = Guid.NewGuid(),
+            Token = Guid.NewGuid().ToString(),
             ExpiresAt = DateTime.UtcNow.AddDays(7),
             CreatedAt = DateTime.UtcNow
         };
@@ -62,7 +58,6 @@ public class InviteService
         _db.Invites.Add(invite);
         await _db.SaveChangesAsync();
 
-        // Enviar e-mail via notification-service
         var frontendUrl = _config["FrontendUrl"] ?? "http://localhost:3000";
         var inviteLink = $"{frontendUrl}/invite.html?token={invite.Token}";
 
@@ -76,21 +71,16 @@ public class InviteService
         return (MapToDto(invite, requester.Workspace.Name), null);
     }
 
-    // ── Aceitar convite ────────────────────────────────────
     public async Task<(bool success, string? error)> AcceptInviteAsync(string token, int userId)
     {
-        if (!Guid.TryParse(token, out var tokenGuid))
-            return (false, "Token inválido.");
-
         var invite = await _db.Invites
             .Include(i => i.Workspace)
-            .FirstOrDefaultAsync(i => i.Token == tokenGuid);
+            .FirstOrDefaultAsync(i => i.Token == token);
 
         if (invite == null) return (false, "Convite não encontrado.");
         if (invite.AcceptedAt != null) return (false, "Convite já foi utilizado.");
         if (invite.ExpiresAt < DateTime.UtcNow) return (false, "Convite expirado.");
 
-        // Verificar se já é membro
         var alreadyMember = await _db.WorkspaceMembers
             .AnyAsync(m => m.WorkspaceId == invite.WorkspaceId && m.UserId == userId);
 
@@ -105,15 +95,13 @@ public class InviteService
         };
 
         _db.WorkspaceMembers.Add(member);
-
         invite.AcceptedAt = DateTime.UtcNow;
         await _db.SaveChangesAsync();
 
         return (true, null);
     }
 
-    // ── Listar convites de um workspace ───────────────────
-    public async Task<List<InviteResponseDto>?> GetWorkspaceInvitesAsync(Guid workspaceId, int userId)
+    public async Task<List<InviteResponseDto>?> GetWorkspaceInvitesAsync(int workspaceId, int userId)
     {
         var isMember = await _db.WorkspaceMembers
             .AnyAsync(m => m.WorkspaceId == workspaceId &&
@@ -131,9 +119,8 @@ public class InviteService
             .ToListAsync();
     }
 
-    // ── Revogar convite ────────────────────────────────────
     public async Task<(bool success, string? error)> RevokeInviteAsync(
-        int inviteId, Guid workspaceId, int userId)
+        int inviteId, int workspaceId, int userId)
     {
         var requester = await _db.WorkspaceMembers
             .FirstOrDefaultAsync(m => m.WorkspaceId == workspaceId && m.UserId == userId);
@@ -153,14 +140,11 @@ public class InviteService
         return (true, null);
     }
 
-    // ── Preview do convite (sem autenticação) ──────────────
     public async Task<InviteResponseDto?> GetInvitePreviewAsync(string token)
     {
-        if (!Guid.TryParse(token, out var tokenGuid)) return null;
-
         var invite = await _db.Invites
             .Include(i => i.Workspace)
-            .FirstOrDefaultAsync(i => i.Token == tokenGuid);
+            .FirstOrDefaultAsync(i => i.Token == token);
 
         return invite == null ? null : MapToDto(invite, invite.Workspace.Name);
     }
@@ -171,7 +155,7 @@ public class InviteService
         WorkspaceId = invite.WorkspaceId,
         WorkspaceName = workspaceName,
         Email = invite.Email,
-        Token = invite.Token.ToString(),
+        Token = invite.Token,
         ExpiresAt = invite.ExpiresAt,
         IsAccepted = invite.AcceptedAt != null,
         CreatedAt = invite.CreatedAt

@@ -1,6 +1,5 @@
 namespace TaskFlow.Api.DTOs;
 
-// ── Workspace ──────────────────────────────────────────────
 public class CreateWorkspaceDto
 {
     public string Name { get; set; } = string.Empty;
@@ -15,16 +14,15 @@ public class UpdateWorkspaceDto
 
 public class WorkspaceResponseDto
 {
-    public Guid Id { get; set; }
+    public int Id { get; set; }
     public string Name { get; set; } = string.Empty;
     public string? Description { get; set; }
     public int OwnerId { get; set; }
     public DateTime CreatedAt { get; set; }
-    public string UserRole { get; set; } = string.Empty; // role do usuário autenticado
+    public string UserRole { get; set; } = string.Empty;
     public int MemberCount { get; set; }
 }
 
-// ── Members ────────────────────────────────────────────────
 public class WorkspaceMemberResponseDto
 {
     public int UserId { get; set; }
@@ -36,10 +34,9 @@ public class WorkspaceMemberResponseDto
 
 public class UpdateMemberRoleDto
 {
-    public string Role { get; set; } = string.Empty; // "Admin" ou "Member"
+    public string Role { get; set; } = string.Empty;
 }
 
-// ── Invites ────────────────────────────────────────────────
 public class CreateInviteDto
 {
     public string Email { get; set; } = string.Empty;
@@ -48,7 +45,7 @@ public class CreateInviteDto
 public class InviteResponseDto
 {
     public int Id { get; set; }
-    public Guid WorkspaceId { get; set; }
+    public int WorkspaceId { get; set; }
     public string WorkspaceName { get; set; } = string.Empty;
     public string Email { get; set; } = string.Empty;
     public string Token { get; set; } = string.Empty;

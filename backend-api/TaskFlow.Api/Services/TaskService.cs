@@ -17,12 +17,11 @@ public class TaskService
     }
 
     // Retorna tarefas pessoais (sem workspace) ou de um workspace específico
-    public async Task<List<TaskResponse>> GetAllAsync(int userId, Guid? workspaceId = null)
+    public async Task<List<TaskResponse>> GetAllAsync(int userId, int? workspaceId = null)
     {
         if (workspaceId.HasValue)
         {
-            var isMember = await _db.TaskItems
-                .OfType<WorkspaceMember>() // ou _db.WorkspaceMembers se disponível
+            var isMember = await _db.WorkspaceMembers
                 .AnyAsync(m => m.WorkspaceId == workspaceId && m.UserId == userId);
 
             if (!isMember) return new List<TaskResponse>();

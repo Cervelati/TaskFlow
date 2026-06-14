@@ -3,7 +3,9 @@ namespace TaskFlow.Api.DTOs;
 public record CreateTaskRequest(
     string Title,
     string Description,
-    DateTime? DueDate
+    DateTime? DueDate,
+    string? Status,
+    int? WorkspaceId
 );
 
 public record UpdateTaskRequest(

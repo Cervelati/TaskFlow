@@ -5,7 +5,7 @@
 
 'use strict';
 
-const API_URL   = 'http://localhost:5000';
+const API_URL   = 'http://localhost:8080';
 const POLL_INTERVAL = 30000; // atualiza a cada 30s
 
 /* ─── STATE ─── */

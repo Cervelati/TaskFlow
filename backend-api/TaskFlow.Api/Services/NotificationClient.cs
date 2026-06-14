@@ -37,6 +37,7 @@ public class NotificationClient
             _logger.LogError("Erro ao notificar tarefa {TaskId}: {Error}", taskId, ex.Message);
         }
     }
+
     public async Task SendInviteEmailAsync(string toEmail, string workspaceName, string inviteLink, DateTime expiresAt)
     {
         try
@@ -61,12 +62,11 @@ public class NotificationClient
                 """
             };
 
-            await _httpClient.PostAsJsonAsync("/notify/email", payload);
+            await _http.PostAsJsonAsync("/notify/email", payload);
         }
         catch (Exception ex)
         {
-            // Log sem quebrar o fluxo principal
-            Console.WriteLine($"[NotificationClient] Falha ao enviar convite: {ex.Message}");
+            _logger.LogError("[NotificationClient] Falha ao enviar convite: {Error}", ex.Message);
         }
     }
 }

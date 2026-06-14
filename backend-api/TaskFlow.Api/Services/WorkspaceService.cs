@@ -15,7 +15,6 @@ public class WorkspaceService
         _db = db;
     }
 
-    // ── Listar workspaces do usuário (owner + member) ──────
     public async Task<List<WorkspaceResponseDto>> GetUserWorkspacesAsync(int userId)
     {
         var memberships = await _db.WorkspaceMembers
@@ -35,8 +34,7 @@ public class WorkspaceService
         }).ToList();
     }
 
-    // ── Buscar workspace por ID ────────────────────────────
-    public async Task<WorkspaceResponseDto?> GetByIdAsync(Guid workspaceId, int userId)
+    public async Task<WorkspaceResponseDto?> GetByIdAsync(int workspaceId, int userId)
     {
         var membership = await _db.WorkspaceMembers
             .Include(m => m.Workspace)
@@ -56,11 +54,9 @@ public class WorkspaceService
         };
     }
 
-    // ── Criar workspace ────────────────────────────────────
     public async Task<(WorkspaceResponseDto? workspace, string? error)> CreateAsync(
         int userId, CreateWorkspaceDto dto)
     {
-        // Limite: máximo 3 workspaces onde o usuário é Owner
         var ownedCount = await _db.WorkspaceMembers
             .CountAsync(m => m.UserId == userId && m.Role == "Owner");
 
@@ -70,7 +66,7 @@ public class WorkspaceService
         var workspace = new Workspace
         {
             Name = dto.Name.Trim(),
-            Description = dto.Description?.Trim(),
+            Description = dto.Description?.Trim() ?? string.Empty,
             OwnerId = userId,
             CreatedAt = DateTime.UtcNow
         };
@@ -78,7 +74,6 @@ public class WorkspaceService
         _db.Workspaces.Add(workspace);
         await _db.SaveChangesAsync();
 
-        // Owner entra automaticamente como membro
         var member = new WorkspaceMember
         {
             WorkspaceId = workspace.Id,
@@ -102,9 +97,8 @@ public class WorkspaceService
         }, null);
     }
 
-    // ── Atualizar workspace ────────────────────────────────
     public async Task<(bool success, string? error)> UpdateAsync(
-        Guid workspaceId, int userId, UpdateWorkspaceDto dto)
+        int workspaceId, int userId, UpdateWorkspaceDto dto)
     {
         var membership = await _db.WorkspaceMembers
             .Include(m => m.Workspace)
@@ -115,14 +109,13 @@ public class WorkspaceService
             return (false, "Sem permissão para editar este workspace.");
 
         membership.Workspace.Name = dto.Name.Trim();
-        membership.Workspace.Description = dto.Description?.Trim();
+        membership.Workspace.Description = dto.Description?.Trim() ?? string.Empty;
         await _db.SaveChangesAsync();
 
         return (true, null);
     }
 
-    // ── Deletar workspace ──────────────────────────────────
-    public async Task<(bool success, string? error)> DeleteAsync(Guid workspaceId, int userId)
+    public async Task<(bool success, string? error)> DeleteAsync(int workspaceId, int userId)
     {
         var workspace = await _db.Workspaces
             .FirstOrDefaultAsync(w => w.Id == workspaceId && w.OwnerId == userId);
@@ -135,8 +128,7 @@ public class WorkspaceService
         return (true, null);
     }
 
-    // ── Listar membros ─────────────────────────────────────
-    public async Task<List<WorkspaceMemberResponseDto>?> GetMembersAsync(Guid workspaceId, int userId)
+    public async Task<List<WorkspaceMemberResponseDto>?> GetMembersAsync(int workspaceId, int userId)
     {
         var isMember = await _db.WorkspaceMembers
             .AnyAsync(m => m.WorkspaceId == workspaceId && m.UserId == userId);
@@ -157,9 +149,8 @@ public class WorkspaceService
             .ToListAsync();
     }
 
-    // ── Alterar role de membro ─────────────────────────────
     public async Task<(bool success, string? error)> UpdateMemberRoleAsync(
-        Guid workspaceId, int requestingUserId, int targetUserId, string newRole)
+        int workspaceId, int requestingUserId, int targetUserId, string newRole)
     {
         var validRoles = new[] { "Admin", "Member" };
         if (!validRoles.Contains(newRole))
@@ -183,9 +174,8 @@ public class WorkspaceService
         return (true, null);
     }
 
-    // ── Remover membro ─────────────────────────────────────
     public async Task<(bool success, string? error)> RemoveMemberAsync(
-        Guid workspaceId, int requestingUserId, int targetUserId)
+        int workspaceId, int requestingUserId, int targetUserId)
     {
         var requester = await _db.WorkspaceMembers
             .FirstOrDefaultAsync(m => m.WorkspaceId == workspaceId && m.UserId == requestingUserId);
@@ -205,8 +195,7 @@ public class WorkspaceService
         return (true, null);
     }
 
-    // ── Sair do workspace ──────────────────────────────────
-    public async Task<(bool success, string? error)> LeaveWorkspaceAsync(Guid workspaceId, int userId)
+    public async Task<(bool success, string? error)> LeaveWorkspaceAsync(int workspaceId, int userId)
     {
         var membership = await _db.WorkspaceMembers
             .FirstOrDefaultAsync(m => m.WorkspaceId == workspaceId && m.UserId == userId);
