@@ -1,16 +1,18 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>TaskFlow</title>
+  <title>TaskFlow — Organize, colabore e entregue mais</title>
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="assets/css/style.css">
 </head>
+
 <body>
 
   <!-- NAV -->
-  <nav>
+  <nav id="main-nav">
     <a class="nav-logo" href="#">
       <div class="logo-icon">
         <div class="logo-col"></div>
@@ -20,11 +22,11 @@
       TaskFlow
     </a>
     <div class="links">
-      <a href="#">Funcionalidades</a>
-      <a href="#">Soluções</a>
-      <a href="#">Planos</a>
-      <a href="#">Preços</a>
-      <a href="#">Recursos</a>
+      <a href="#funcionalidades">Funcionalidades</a>
+      <a href="#solucoes">Soluções</a>
+      <a href="pricing.html">Planos</a>
+      <a href="pricing.html">Preços</a>
+      <a href="#recursos">Recursos</a>
     </div>
     <div class="nav-right">
       <button class="btn-ghost" onclick="window.location.href='login.html'">Entrar</button>
@@ -35,7 +37,7 @@
   <!-- HERO -->
   <section class="hero">
     <div class="hero-left">
-      <div class="hero-badge">✦ Novo — Recursos de IA disponíveis</div>
+      <div class="hero-badge">✦ Novo — Workspaces colaborativos disponíveis</div>
       <h1 class="hero-title">Capture, organize e<br><span>entregue mais</span><br>com TaskFlow.</h1>
       <p class="hero-sub">Escape do caos e da sobrecarga — libere a produtividade da sua equipe com quadros intuitivos e colaboração em tempo real.</p>
       <div class="hero-form">
@@ -43,6 +45,22 @@
         <button class="btn-cta" onclick="window.location.href='login.html'">Começar — é grátis!</button>
       </div>
       <p class="hero-note">Ao continuar, você concorda com nossa <a href="#">Política de Privacidade</a>.</p>
+      <div class="hero-stats">
+        <div class="stat">
+          <span class="stat-number">10k+</span>
+          <span class="stat-label">Usuários ativos</span>
+        </div>
+        <div class="stat-divider"></div>
+        <div class="stat">
+          <span class="stat-number">98%</span>
+          <span class="stat-label">Satisfação</span>
+        </div>
+        <div class="stat-divider"></div>
+        <div class="stat">
+          <span class="stat-number">3x</span>
+          <span class="stat-label">Mais produtivo</span>
+        </div>
+      </div>
     </div>
 
     <div class="hero-right">
@@ -56,7 +74,6 @@
               <div class="phone-tab">Todos</div>
             </div>
             <div class="phone-cards">
-
               <div class="pcard">
                 <div class="pcard-title">Revisão da estadia em Austin</div>
                 <div class="pcard-row">
@@ -70,7 +87,6 @@
                   <div class="avatar" style="background:#00B8D9;color:white">BT</div>
                 </div>
               </div>
-
               <div class="pcard">
                 <div class="pcard-title">Análise de campanhas recentes</div>
                 <div class="pcard-row">
@@ -83,7 +99,6 @@
                   <div class="avatar" style="background:#FF5630;color:white">PR</div>
                 </div>
               </div>
-
               <div class="pcard">
                 <div class="pcard-title">Apresentação movida para sexta</div>
                 <div class="pcard-row">
@@ -95,7 +110,6 @@
                   <div class="avatar" style="background:#FF5630;color:white">KL</div>
                 </div>
               </div>
-
               <div class="pcard">
                 <div class="pcard-title">Poster do projeto finalizado</div>
                 <div class="pcard-row">
@@ -104,14 +118,24 @@
                   <span class="pcard-badge badge-green">Entregue</span>
                 </div>
               </div>
-
             </div>
           </div>
         </div>
-        <div class="floaters">
-          <div class="float-icon">🟦</div>
-          <div class="float-icon">💬</div>
-          <div class="float-icon">📧</div>
+
+        <!-- Floating cards -->
+        <div class="float-card float-card-1">
+          <span class="float-card-icon">✅</span>
+          <div>
+            <div class="float-card-title">Tarefa concluída!</div>
+            <div class="float-card-sub">Dashboard v2.0</div>
+          </div>
+        </div>
+        <div class="float-card float-card-2">
+          <span class="float-card-icon">👥</span>
+          <div>
+            <div class="float-card-title">3 membros online</div>
+            <div class="float-card-sub">Workspace Dev</div>
+          </div>
         </div>
       </div>
     </div>
@@ -121,17 +145,35 @@
   <div class="logos-strip">
     <p>Usado por equipes em todo o mundo</p>
     <div class="logos-row">
-      <span class="logo-pill">Acme Corp</span>
-      <span class="logo-pill">Vercel</span>
-      <span class="logo-pill">Stripe</span>
-      <span class="logo-pill">Notion</span>
-      <span class="logo-pill">Figma</span>
-      <span class="logo-pill">Linear</span>
+      <span class="logo-pill">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><rect width="24" height="24" rx="4" fill="#0052CC" opacity=".15"/><text x="4" y="17" font-size="12" font-weight="800" fill="#0052CC">A</text></svg>
+        Acme Corp
+      </span>
+      <span class="logo-pill">
+        <svg width="16" height="16" viewBox="0 0 24 24"><rect width="24" height="24" rx="4" fill="#000" opacity=".08"/><text x="4" y="17" font-size="12" font-weight="800" fill="#000">V</text></svg>
+        Vercel
+      </span>
+      <span class="logo-pill">
+        <svg width="16" height="16" viewBox="0 0 24 24"><rect width="24" height="24" rx="4" fill="#635BFF" opacity=".15"/><text x="4" y="17" font-size="12" font-weight="800" fill="#635BFF">S</text></svg>
+        Stripe
+      </span>
+      <span class="logo-pill">
+        <svg width="16" height="16" viewBox="0 0 24 24"><rect width="24" height="24" rx="4" fill="#000" opacity=".08"/><text x="4" y="17" font-size="12" font-weight="800" fill="#000">N</text></svg>
+        Notion
+      </span>
+      <span class="logo-pill">
+        <svg width="16" height="16" viewBox="0 0 24 24"><rect width="24" height="24" rx="4" fill="#F24E1E" opacity=".15"/><text x="4" y="17" font-size="12" font-weight="800" fill="#F24E1E">F</text></svg>
+        Figma
+      </span>
+      <span class="logo-pill">
+        <svg width="16" height="16" viewBox="0 0 24 24"><rect width="24" height="24" rx="4" fill="#5E6AD2" opacity=".15"/><text x="4" y="17" font-size="12" font-weight="800" fill="#5E6AD2">L</text></svg>
+        Linear
+      </span>
     </div>
   </div>
 
   <!-- FEATURES -->
-  <section class="features">
+  <section class="features" id="funcionalidades">
     <div class="section-label">Por que TaskFlow</div>
     <h2 class="section-title">Tudo que sua equipe precisa em um só lugar</h2>
     <p class="section-sub">Quadros, listas e cartões que se adaptam ao jeito que sua equipe trabalha.</p>
@@ -140,19 +182,21 @@
       <div class="feat-card">
         <div class="feat-icon" style="background:#E6F0FF">📋</div>
         <h3>Quadros Kanban</h3>
-        <p>Visualize o fluxo de trabalho da sua equipe em tempo real. Mova tarefas com drag & drop e saiba o status de tudo instantaneamente.</p>
+        <p>Visualize o fluxo de trabalho da sua equipe em tempo real. Mova tarefas e saiba o status de tudo instantaneamente.</p>
+        <div class="feat-tag">Popular</div>
       </div>
 
       <div class="feat-card">
         <div class="feat-icon" style="background:#E3FCEF">🔔</div>
         <h3>Notificações inteligentes</h3>
-        <p>Receba alertas no momento certo. Integração nativa com e-mail, Slack e Microsoft Teams para não perder nenhum prazo.</p>
+        <p>Receba alertas no momento certo. Integração nativa com e-mail para não perder nenhum prazo.</p>
       </div>
 
       <div class="feat-card">
-        <div class="feat-icon" style="background:#EAE6FF">⚡</div>
-        <h3>Automações com IA</h3>
-        <p>Automatize tarefas repetitivas com nossa IA integrada. Configure regras e deixe o TaskFlow trabalhar por você.</p>
+        <div class="feat-icon" style="background:#EAE6FF">🏢</div>
+        <h3>Workspaces colaborativos</h3>
+        <p>Crie espaços de trabalho para sua equipe. Convide membros, gerencie permissões e colabore em tempo real.</p>
+        <div class="feat-tag feat-tag-new">Novo</div>
       </div>
 
       <div class="feat-card">
@@ -170,36 +214,120 @@
       <div class="feat-card">
         <div class="feat-icon" style="background:#E3FCEF">🔒</div>
         <h3>Segurança enterprise</h3>
-        <p>SSO, autenticação em dois fatores e controle de permissões por equipe. Seus dados protegidos com padrão enterprise.</p>
+        <p>Autenticação JWT, controle de permissões por equipe e convites seguros. Seus dados protegidos.</p>
       </div>
 
+    </div>
+  </section>
+
+  <!-- HOW IT WORKS -->
+  <section class="how-it-works" id="solucoes">
+    <div class="hiw-left">
+      <div class="section-label">Como funciona</div>
+      <h2 class="section-title">Do caos à clareza em 3 passos</h2>
+      <p class="section-sub">Configure seu workspace em minutos e comece a colaborar imediatamente.</p>
+      <div class="steps">
+        <div class="step">
+          <div class="step-num">01</div>
+          <div class="step-content">
+            <h4>Crie sua conta</h4>
+            <p>Cadastre-se gratuitamente em segundos. Sem cartão de crédito.</p>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">02</div>
+          <div class="step-content">
+            <h4>Monte seu workspace</h4>
+            <p>Crie um workspace, convide sua equipe por e-mail e defina as permissões.</p>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">03</div>
+          <div class="step-content">
+            <h4>Comece a entregar</h4>
+            <p>Crie tarefas, organize no Kanban e acompanhe o progresso em tempo real.</p>
+          </div>
+        </div>
+      </div>
+      <button class="btn-cta" onclick="window.location.href='login.html'" style="margin-top:32px">Criar conta grátis →</button>
+    </div>
+    <div class="hiw-right">
+      <div class="kanban-preview">
+        <div class="kp-header">
+          <span class="kp-title">🏢 Workspace Dev</span>
+          <span class="kp-members">
+            <span class="kp-avatar" style="background:#0052CC">MC</span>
+            <span class="kp-avatar" style="background:#6554C0">AL</span>
+            <span class="kp-avatar" style="background:#36B37E">SF</span>
+            <span class="kp-plus">+2</span>
+          </span>
+        </div>
+        <div class="kp-cols">
+          <div class="kp-col">
+            <div class="kp-col-title">🚀 A fazer <span class="kp-count">3</span></div>
+            <div class="kp-card">Implementar autenticação JWT</div>
+            <div class="kp-card">Criar tela de dashboard</div>
+            <div class="kp-card kp-card-urgent">⚡ API de notificações</div>
+          </div>
+          <div class="kp-col">
+            <div class="kp-col-title">⚡ Em andamento <span class="kp-count">2</span></div>
+            <div class="kp-card kp-card-active">Sistema de workspaces</div>
+            <div class="kp-card">Integração com e-mail</div>
+          </div>
+          <div class="kp-col">
+            <div class="kp-col-title">✅ Concluído <span class="kp-count">4</span></div>
+            <div class="kp-card kp-card-done">✓ Landing page</div>
+            <div class="kp-card kp-card-done">✓ Login e cadastro</div>
+          </div>
+        </div>
+      </div>
     </div>
   </section>
 
   <!-- CTA -->
   <section class="cta-section">
-    <h2>Pronto para organizar sua equipe?</h2>
-    <p>Junte-se a milhares de equipes que já usam o TaskFlow.</p>
-    <button class="btn-white" onclick="window.location.href='login.html'">Começar grátis agora</button>
+    <div class="cta-inner">
+      <div class="cta-badge">Grátis para começar</div>
+      <h2>Pronto para organizar sua equipe?</h2>
+      <p>Junte-se a mais de 10.000 equipes que já usam o TaskFlow para entregar mais.</p>
+      <div class="cta-actions">
+        <button class="btn-white" onclick="window.location.href='login.html'">Começar grátis agora</button>
+        <button class="btn-ghost-white" onclick="window.location.href='pricing.html'">Ver planos →</button>
+      </div>
+    </div>
   </section>
 
   <!-- FOOTER -->
   <footer>
-    <a class="nav-logo" href="#">
-      <div class="logo-icon" style="background:rgba(255,255,255,.15)">
-        <div class="logo-col"></div>
-        <div class="logo-col"></div>
-        <div class="logo-col"></div>
+    <div class="footer-top">
+      <a class="nav-logo footer-logo" href="#">
+        <div class="logo-icon" style="background:rgba(255,255,255,.15)">
+          <div class="logo-col"></div>
+          <div class="logo-col"></div>
+          <div class="logo-col"></div>
+        </div>
+        TaskFlow
+      </a>
+      <p class="footer-desc">Organize, colabore e entregue mais com sua equipe.</p>
+    </div>
+    <div class="footer-bottom">
+      <span>© 2026 TaskFlow. Todos os direitos reservados.</span>
+      <div>
+        <a href="#">Privacidade</a>
+        <a href="#">Termos</a>
+        <a href="#">Suporte</a>
+        <a href="#">Blog</a>
       </div>
-      TaskFlow
-    </a>
-    <div>
-      <a href="#">Privacidade</a>
-      <a href="#">Termos</a>
-      <a href="#">Suporte</a>
-      <a href="#">Blog</a>
     </div>
   </footer>
+
+  <script>
+    // Nav scroll effect
+    const nav = document.getElementById('main-nav');
+    window.addEventListener('scroll', () => {
+      nav.classList.toggle('scrolled', window.scrollY > 20);
+    });
+  </script>
 
 </body>
 </html>

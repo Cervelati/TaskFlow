@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>TaskFlow — Planos e Preços</title>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap"
+    rel="stylesheet" />
+  <link rel="stylesheet" href="assets/css/style.css" />
+  <link rel="stylesheet" href="assets/css/pricing.css" />
+</head>
+
+<body>
+
+  <!-- NAV -->
+  <nav>
+    <a class="nav-logo" href="index.html">
+      <div class="logo-icon">
+        <div class="logo-col"></div>
+        <div class="logo-col"></div>
+        <div class="logo-col"></div>
+      </div>
+      TaskFlow
+    </a>
+    <div class="links">
+      <a href="index.html#funcionalidades">Funcionalidades</a>
+      <a href="index.html#solucoes">Soluções</a>
+      <a href="pricing.html" class="active">Planos</a>
+      <a href="pricing.html">Preços</a>
+      <a href="index.html#recursos">Recursos</a>
+    </div>
+    <div class="nav-right">
+      <button class="btn-ghost" onclick="window.location.href='login.html'">Entrar</button>
+      <button class="btn-primary" onclick="window.location.href='login.html'">Começar grátis</button>
+    </div>
+  </nav>
+
+  <!-- SEÇÃO DE PREÇOS -->
+  <section class="pricing" id="precos">
+    <div class="pricing__container">
+
+      <div class="pricing__header">
+        <span class="pricing__eyebrow">Planos e preços</span>
+        <h2 class="pricing__title">TaskFlow do seu jeito.</h2>
+        <p class="pricing__subtitle">Milhares de equipes já usam o TaskFlow. Encontre o plano ideal para você.</p>
+
+        <div class="pricing__toggle">
+          <span class="pricing__toggle-label" id="lbl-monthly">Mensal</span>
+          <button class="pricing__toggle-track" id="billing-toggle" aria-pressed="false" aria-label="Alternar cobrança anual">
+            <span class="pricing__toggle-thumb" id="toggle-thumb"></span>
+          </button>
+          <span class="pricing__toggle-label" id="lbl-annual">Anual</span>
+          <span class="pricing__save-badge">Economize 20%</span>
+        </div>
+      </div>
+
+      <div class="pricing__grid">
+
+        <!-- PLANO GRÁTIS -->
+        <div class="pricing__card">
+          <div class="pricing__card-top">
+            <p class="pricing__plan-name">Grátis</p>
+            <div class="pricing__price-wrap">
+              <span class="pricing__price">R$ 0</span>
+            </div>
+            <p class="pricing__plan-desc">Grátis para até 10 colaboradores por Workspace.</p>
+          </div>
+          <ul class="pricing__features">
+            <li><span class="pricing__check">✓</span>Cards ilimitados</li>
+            <li><span class="pricing__check">✓</span>Até 10 quadros por Workspace</li>
+            <li><span class="pricing__check">✓</span>Armazenamento de 10 MB por arquivo</li>
+            <li><span class="pricing__check">✓</span>250 automações por mês</li>
+            <li><span class="pricing__check">✓</span>Apps iOS e Android</li>
+          </ul>
+          <a href="login.html" class="pricing__btn pricing__btn--outline">Começar grátis</a>
+        </div>
+
+        <!-- PLANO STANDARD -->
+        <div class="pricing__card">
+          <div class="pricing__card-top">
+            <p class="pricing__plan-name">Standard</p>
+            <div class="pricing__price-wrap">
+              <span class="pricing__price" data-monthly="R$ 25" data-annual="R$ 20">R$ 25</span>
+              <span class="pricing__price-period">/mês por usuário</span>
+            </div>
+            <p class="pricing__plan-desc">Quadros ilimitados e mais automações para a equipe crescer.</p>
+          </div>
+          <ul class="pricing__features">
+            <li><span class="pricing__check">✓</span>Tudo do plano Grátis</li>
+            <li><span class="pricing__check">✓</span>Quadros ilimitados</li>
+            <li><span class="pricing__check">✓</span>Armazenamento de 250 MB por arquivo</li>
+            <li><span class="pricing__check">✓</span>1.000 automações por mês</li>
+            <li><span class="pricing__check">✓</span>Campos personalizados</li>
+            <li><span class="pricing__check">✓</span>Listas de verificação avançadas</li>
+          </ul>
+          <a href="login.html" class="pricing__btn pricing__btn--outline">Assinar Standard</a>
+        </div>
+
+        <!-- PLANO PREMIUM (destaque) -->
+        <div class="pricing__card pricing__card--featured">
+          <div class="pricing__card-top">
+            <div class="pricing__plan-header">
+              <p class="pricing__plan-name">Premium</p>
+              <span class="pricing__popular-badge">Mais popular</span>
+            </div>
+            <div class="pricing__price-wrap">
+              <span class="pricing__price" data-monthly="R$ 49" data-annual="R$ 39">R$ 49</span>
+              <span class="pricing__price-period">/mês por usuário</span>
+            </div>
+            <p class="pricing__plan-desc">IA nos quadros, mais visualizações e controles avançados de admin.</p>
+          </div>
+          <ul class="pricing__features">
+            <li><span class="pricing__check">✓</span>Tudo do plano Standard</li>
+            <li><span class="pricing__check">✓</span>IA integrada nos quadros</li>
+            <li><span class="pricing__check">✓</span>Visualizações: Calendário, Timeline e Mapa</li>
+            <li><span class="pricing__check">✓</span>Automações ilimitadas</li>
+            <li><span class="pricing__check">✓</span>Controles de admin e segurança</li>
+            <li><span class="pricing__check">✓</span>Exportação de dados em CSV</li>
+          </ul>
+          <a href="login.html" class="pricing__btn pricing__btn--filled">Assinar Premium</a>
+        </div>
+
+        <!-- PLANO ENTERPRISE -->
+        <div class="pricing__card">
+          <div class="pricing__card-top">
+            <p class="pricing__plan-name">Enterprise</p>
+            <div class="pricing__price-wrap">
+              <span class="pricing__price" data-monthly="R$ 85" data-annual="R$ 68">R$ 85</span>
+              <span class="pricing__price-period">/mês por usuário</span>
+            </div>
+            <p class="pricing__plan-desc">Segurança enterprise e administração centralizada para grandes times.</p>
+          </div>
+          <ul class="pricing__features">
+            <li><span class="pricing__check">✓</span>Tudo do plano Premium</li>
+            <li><span class="pricing__check">✓</span>Workspaces ilimitados</li>
+            <li><span class="pricing__check">✓</span>SSO e provisionamento de usuários</li>
+            <li><span class="pricing__check">✓</span>Permissões por organização</li>
+            <li><span class="pricing__check">✓</span>Auditoria e logs de atividade</li>
+            <li><span class="pricing__check">✓</span>Suporte dedicado 24/7</li>
+          </ul>
+          <a href="login.html" class="pricing__btn pricing__btn--outline">Falar com vendas</a>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA -->
+  <section class="cta-section">
+    <h2>Pronto para organizar sua equipe?</h2>
+    <p>Junte-se a milhares de equipes que já usam o TaskFlow.</p>
+    <button class="btn-white" onclick="window.location.href='login.html'">Começar grátis agora</button>
+  </section>
+
+  <!-- FOOTER -->
+  <footer>
+    <a class="nav-logo" href="index.html">
+      <div class="logo-icon" style="background:rgba(255,255,255,.15)">
+        <div class="logo-col"></div>
+        <div class="logo-col"></div>
+        <div class="logo-col"></div>
+      </div>
+      TaskFlow
+    </a>
+    <div>
+      <a href="#">Privacidade</a>
+      <a href="#">Termos</a>
+      <a href="#">Suporte</a>
+      <a href="#">Blog</a>
+    </div>
+  </footer>
+
+  <script src="assets/js/pricing.js"></script>
+</body>
+
+</html>
