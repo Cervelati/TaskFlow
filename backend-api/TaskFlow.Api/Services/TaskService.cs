@@ -28,13 +28,14 @@ public class TaskService
         }
 
         return await _db.TaskItems
-            .Where(t => t.UserId == userId && t.WorkspaceId == workspaceId)
-            .OrderByDescending(t => t.CreatedAt)
-            .Select(t => new TaskResponse(
-                t.Id, t.Title, t.Description,
-                t.IsCompleted, t.CreatedAt, t.DueDate, t.UserId
-            ))
-            .ToListAsync();
+        .Where(t => t.UserId == userId && t.WorkspaceId == workspaceId)
+        .OrderByDescending(t => t.CreatedAt)
+        .Select(t => new TaskResponse(
+            t.Id, t.Title, t.Description,
+            t.IsCompleted, t.CreatedAt, t.DueDate, t.UserId,
+            t.Status, t.WorkspaceId
+        ))
+        .ToListAsync();
     }
 
     public async Task<TaskResponse?> GetByIdAsync(int id, int userId)
@@ -107,7 +108,8 @@ public class TaskService
     }
 
     private static TaskResponse ToResponse(TaskItem t) => new(
-        t.Id, t.Title, t.Description,
-        t.IsCompleted, t.CreatedAt, t.DueDate, t.UserId
+    t.Id, t.Title, t.Description,
+    t.IsCompleted, t.CreatedAt, t.DueDate, t.UserId,
+    t.Status, t.WorkspaceId
     );
-}
+};

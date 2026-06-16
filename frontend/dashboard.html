@@ -10,6 +10,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap"
         rel="stylesheet" />
     <link rel="stylesheet" href="assets/css/dashboard.css" />
+    <link rel="stylesheet" href="assets/css/theme-vars.css" />
 </head>
 
 <body data-theme="blue">
@@ -48,36 +49,78 @@
                 </div>
             </nav>
 
-            <!-- ── THEME SECTION ── -->
-            <div class="theme-section">
-                <div class="theme-label">Aparência</div>
+            <!-- ── APPEARANCE ACCORDION ── -->
+            <button
+                class="appearance-trigger"
+                id="appearance-trigger"
+                aria-expanded="false"
+                aria-controls="appearance-panel"
+                onclick="toggleAppearance()"
+            >
+                <span class="ap-trigger-icon">✦</span>
+                <span class="ap-trigger-label">Aparência</span>
+                <span class="ap-chevron">▾</span>
+            </button>
 
+            <div class="appearance-panel" id="appearance-panel" role="region" aria-labelledby="appearance-trigger">
+
+                <!-- Modo -->
+                <div class="ap-section-label">Modo</div>
                 <div class="mode-row">
-                    <button class="mode-btn active" id="btn-dark-mode" title="Modo Escuro"
-                        onclick="setMode('dark-mode')">
-                        <span>🌙</span> Escuro
+                    <button class="mode-btn active" id="btn-dark-mode" onclick="setMode('dark-mode')">
+                        🌙 Escuro
                     </button>
-                    <button class="mode-btn" id="btn-light-mode" title="Modo Claro" onclick="setMode('light-mode')">
-                        <span>☀️</span> Claro
+                    <button class="mode-btn" id="btn-light-mode" onclick="setMode('light-mode')">
+                        ☀️ Claro
                     </button>
                 </div>
 
-                <div class="theme-label" style="margin-top:12px;">Cor do board</div>
-                <div class="theme-options" id="theme-options">
-                    <button class="theme-btn active" data-theme="blue" style="background:#0052CC" title="Azul"
-                        onclick="setTheme('blue',this)"></button>
-                    <button class="theme-btn" data-theme="teal" style="background:#008DA6" title="Teal"
-                        onclick="setTheme('teal',this)"></button>
-                    <button class="theme-btn" data-theme="green" style="background:#0B6E4F" title="Verde"
-                        onclick="setTheme('green',this)"></button>
-                    <button class="theme-btn" data-theme="purple" style="background:#403294" title="Roxo"
-                        onclick="setTheme('purple',this)"></button>
-                    <button class="theme-btn" data-theme="slate" style="background:#2C3E50" title="Slate"
-                        onclick="setTheme('slate',this)"></button>
-                    <button class="theme-btn" data-theme="crimson" style="background:#8B1A2B" title="Crimson"
-                        onclick="setTheme('crimson',this)"></button>
-                    <button class="theme-btn" data-theme="midnight" style="background:#1A1A2E" title="Midnight"
-                        onclick="setTheme('midnight',this)"></button>
+                <!-- Cor do board -->
+                <div class="ap-section-label" style="margin-top:6px;">Cor do board</div>
+                <div class="color-list" id="color-list">
+
+                    <div class="color-row active" data-theme="blue" onclick="setTheme('blue', this)">
+                        <span class="color-swatch" style="background:#0052CC;"></span>
+                        <span class="color-row-name">Azul</span>
+                        <span class="color-row-check">✓</span>
+                    </div>
+
+                    <div class="color-row" data-theme="teal" onclick="setTheme('teal', this)">
+                        <span class="color-swatch" style="background:#007A94;"></span>
+                        <span class="color-row-name">Verde-azulado</span>
+                        <span class="color-row-check">✓</span>
+                    </div>
+
+                    <div class="color-row" data-theme="green" onclick="setTheme('green', this)">
+                        <span class="color-swatch" style="background:#0B6E4F;"></span>
+                        <span class="color-row-name">Verde</span>
+                        <span class="color-row-check">✓</span>
+                    </div>
+
+                    <div class="color-row" data-theme="purple" onclick="setTheme('purple', this)">
+                        <span class="color-swatch" style="background:#403294;"></span>
+                        <span class="color-row-name">Roxo</span>
+                        <span class="color-row-check">✓</span>
+                    </div>
+
+                    <div class="color-row" data-theme="slate" onclick="setTheme('slate', this)">
+                        <span class="color-swatch" style="background:#2C3E50;"></span>
+                        <span class="color-row-name">Slate</span>
+                        <span class="color-row-check">✓</span>
+                    </div>
+
+                    <div class="color-row" data-theme="crimson" onclick="setTheme('crimson', this)">
+                        <span class="color-swatch" style="background:#8B1A2B;"></span>
+                        <span class="color-row-name">Vinho</span>
+                        <span class="color-row-check">✓</span>
+                    </div>
+
+                    <div class="color-row" data-theme="midnight" onclick="setTheme('midnight', this)">
+                        <span class="color-swatch" style="background:#1A1A2E;"></span>
+                        <span class="color-row-name">Midnight</span>
+                        <span class="color-row-check">✓</span>
+                    </div>
+
                 </div>
             </div>
 
@@ -167,6 +210,10 @@
                     <input type="text" id="task-title" placeholder="Descreva a tarefa..." maxlength="120" />
                 </div>
                 <div class="form-group">
+                    <label for="task-desc">Descrição</label>
+                    <textarea id="task-desc" rows="3" placeholder="Detalhes da tarefa..."></textarea>
+                </div>
+                <div class="form-group">
                     <label for="task-tag">Tag</label>
                     <select id="task-tag">
                         <option value="frontend">Frontend</option>
@@ -201,6 +248,7 @@
     </div>
 
     <script src="assets/js/dashboard.js"></script>
+    <script src="assets/js/theme.js"></script>
 </body>
 
 </html>

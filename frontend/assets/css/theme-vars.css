@@ -1,0 +1,75 @@
+/* ── Variáveis dinâmicas de tema (injetadas pelo theme.js) ── */
+:root {
+  --theme-accent:       #0052CC;
+  --theme-accent-light: #E6F0FF;
+  --theme-accent-hover: #003D99;
+}
+
+/* Botões dos cards usam a cor do tema */
+.btn-progress {
+  background: var(--theme-accent-light) !important;
+  color: var(--theme-accent) !important;
+}
+.btn-progress:hover {
+  background: var(--theme-accent) !important;
+  color: white !important;
+}
+
+.btn-done {
+  background: #E3FCEF !important;
+  color: #006644 !important;
+}
+.btn-done:hover {
+  background: #ABF5D1 !important;
+}
+
+.btn-delete {
+  background: #FFEBE6 !important;
+  color: #BF2600 !important;
+}
+.btn-delete:hover {
+  background: #FFBDAD !important;
+}
+
+/* Botão salvar do modal usa cor do tema */
+.btn-save {
+  background: var(--theme-accent) !important;
+}
+.btn-save:hover {
+  background: var(--theme-accent-hover) !important;
+}
+
+/* Botão nova tarefa usa cor do tema no modo claro */
+body[data-theme="light"] .btn-new {
+  background: var(--theme-accent) !important;
+}
+body[data-theme="light"] .btn-new:hover {
+  background: var(--theme-accent-hover) !important;
+}
+
+/* Nav item active usa cor do tema no modo claro */
+body[data-theme="light"] .nav-item.active {
+  background: var(--theme-accent-light) !important;
+  color: var(--theme-accent) !important;
+}
+
+/* User avatar usa cor do tema */
+.user-avatar {
+  background: var(--theme-accent) !important;
+}
+
+/* Workspace card botão primary usa cor do tema */
+.ws-btn-primary {
+  background: var(--theme-accent-light) !important;
+  color: var(--theme-accent) !important;
+}
+.ws-btn-primary:hover {
+  background: var(--theme-accent) !important;
+  color: white !important;
+}
+
+/* Badge de role Owner */
+.role-owner {
+  background: var(--theme-accent-light) !important;
+  color: var(--theme-accent) !important;
+}

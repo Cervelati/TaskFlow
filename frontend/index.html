@@ -4,8 +4,9 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>TaskFlow — Organize, colabore e entregue mais</title>
-  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <title>TaskFlow</title>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap"
+    rel="stylesheet">
   <link rel="stylesheet" href="assets/css/style.css">
 </head>
 
@@ -39,7 +40,8 @@
     <div class="hero-left">
       <div class="hero-badge">✦ Novo — Workspaces colaborativos disponíveis</div>
       <h1 class="hero-title">Capture, organize e<br><span>entregue mais</span><br>com TaskFlow.</h1>
-      <p class="hero-sub">Escape do caos e da sobrecarga — libere a produtividade da sua equipe com quadros intuitivos e colaboração em tempo real.</p>
+      <p class="hero-sub">Escape do caos e da sobrecarga — libere a produtividade da sua equipe com quadros intuitivos e
+        colaboração em tempo real.</p>
       <div class="hero-form">
         <input type="email" placeholder="Digite seu e-mail" />
         <button class="btn-cta" onclick="window.location.href='login.html'">Começar — é grátis!</button>
@@ -144,31 +146,8 @@
   <!-- LOGOS -->
   <div class="logos-strip">
     <p>Usado por equipes em todo o mundo</p>
-    <div class="logos-row">
-      <span class="logo-pill">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><rect width="24" height="24" rx="4" fill="#0052CC" opacity=".15"/><text x="4" y="17" font-size="12" font-weight="800" fill="#0052CC">A</text></svg>
-        Acme Corp
-      </span>
-      <span class="logo-pill">
-        <svg width="16" height="16" viewBox="0 0 24 24"><rect width="24" height="24" rx="4" fill="#000" opacity=".08"/><text x="4" y="17" font-size="12" font-weight="800" fill="#000">V</text></svg>
-        Vercel
-      </span>
-      <span class="logo-pill">
-        <svg width="16" height="16" viewBox="0 0 24 24"><rect width="24" height="24" rx="4" fill="#635BFF" opacity=".15"/><text x="4" y="17" font-size="12" font-weight="800" fill="#635BFF">S</text></svg>
-        Stripe
-      </span>
-      <span class="logo-pill">
-        <svg width="16" height="16" viewBox="0 0 24 24"><rect width="24" height="24" rx="4" fill="#000" opacity=".08"/><text x="4" y="17" font-size="12" font-weight="800" fill="#000">N</text></svg>
-        Notion
-      </span>
-      <span class="logo-pill">
-        <svg width="16" height="16" viewBox="0 0 24 24"><rect width="24" height="24" rx="4" fill="#F24E1E" opacity=".15"/><text x="4" y="17" font-size="12" font-weight="800" fill="#F24E1E">F</text></svg>
-        Figma
-      </span>
-      <span class="logo-pill">
-        <svg width="16" height="16" viewBox="0 0 24 24"><rect width="24" height="24" rx="4" fill="#5E6AD2" opacity=".15"/><text x="4" y="17" font-size="12" font-weight="800" fill="#5E6AD2">L</text></svg>
-        Linear
-      </span>
+    <div class="carousel-track-wrap">
+      <div class="carousel-track" id="logo-track"></div>
     </div>
   </div>
 
@@ -182,7 +161,8 @@
       <div class="feat-card">
         <div class="feat-icon" style="background:#E6F0FF">📋</div>
         <h3>Quadros Kanban</h3>
-        <p>Visualize o fluxo de trabalho da sua equipe em tempo real. Mova tarefas e saiba o status de tudo instantaneamente.</p>
+        <p>Visualize o fluxo de trabalho da sua equipe em tempo real. Mova tarefas e saiba o status de tudo
+          instantaneamente.</p>
         <div class="feat-tag">Popular</div>
       </div>
 
@@ -249,7 +229,8 @@
           </div>
         </div>
       </div>
-      <button class="btn-cta" onclick="window.location.href='login.html'" style="margin-top:32px">Criar conta grátis →</button>
+      <button class="btn-cta" onclick="window.location.href='login.html'" style="margin-top:32px">Criar conta grátis
+        →</button>
     </div>
     <div class="hiw-right">
       <div class="kanban-preview">
@@ -320,14 +301,36 @@
       </div>
     </div>
   </footer>
-
   <script>
     // Nav scroll effect
     const nav = document.getElementById('main-nav');
     window.addEventListener('scroll', () => {
       nav.classList.toggle('scrolled', window.scrollY > 20);
     });
+
+    // Logo carousel
+    const logos = [
+      { name: 'Vercel', bg: '#f0f0f0', svg: `<svg width="18" height="18" viewBox="0 0 76 76"><path d="M38 7L69 62H7L38 7Z" fill="#000"/></svg>` },
+      { name: 'Stripe', bg: '#EEF0FF', svg: `<svg width="18" height="18" viewBox="0 0 60 60"><path d="M28 22c0-2.2 1.8-3 4.5-3 4 0 9 1.3 13 3.5V10C41 8 36.3 7 31.5 7 20.5 7 13 13 13 22.5c0 14.7 20 12.3 20 18.5 0 2.6-2.3 3.4-5.3 3.4-4.5 0-10.3-1.9-14.7-4.4V52c4.9 2.1 9.9 3 14.7 3 11.3 0 19-5.5 19-15.2C46.7 24.8 28 27.5 28 22Z" fill="#635BFF"/></svg>` },
+      { name: 'Notion', bg: '#f7f7f5', svg: `<svg width="22" height="22" viewBox="0 0 24 24" fill="none"><rect width="24" height="24" rx="4" fill="#f7f7f5"/><text x="6" y="17" font-size="14" font-weight="900" font-family="Arial" fill="#000">N</text></svg>` },
+      { name: 'Figma', bg: '#FEF0EB', svg: `<svg width="18" height="18" viewBox="0 0 38 57"><path d="M19 28.5A9.5 9.5 0 1 1 28.5 19 9.5 9.5 0 0 1 19 28.5Z" fill="#1ABCFE"/><path d="M0 47.5A9.5 9.5 0 0 1 9.5 38H19v9.5A9.5 9.5 0 0 1 0 47.5Z" fill="#0ACF83"/><path d="M19 0v19h9.5a9.5 9.5 0 1 0 0-19H19Z" fill="#FF7262"/><path d="M0 9.5A9.5 9.5 0 0 0 9.5 19H19V0H9.5A9.5 9.5 0 0 0 0 9.5Z" fill="#F24E1E"/><path d="M0 28.5A9.5 9.5 0 0 0 9.5 38H19V19H9.5A9.5 9.5 0 0 0 0 28.5Z" fill="#A259FF"/></svg>` },
+      { name: 'Linear', bg: '#EEEFFE', svg: `<svg width="18" height="18" viewBox="0 0 100 100"><path d="M1 57.6L42.4 99c-23.3-4-41.4-22.2-41.4-41.4ZM0 46.2L53.8 100C70.8 97.3 85 86 92.6 70.4L29.6 7.4C14 15 2.7 29.2 0 46.2ZM37.3 2.1L97.9 62.7C99.3 58.6 100 54.4 100 50 100 22.4 77.6 0 50 0c-4.4 0-8.6.7-12.7 2.1Z" fill="#5E6AD2"/></svg>` },
+      { name: 'GitHub', bg: '#f0f0f0', svg: `<svg width="18" height="18" viewBox="0 0 98 96"><path fill-rule="evenodd" d="M49 0C21.9 0 0 22 0 49.2 0 71 14 89.4 33.4 95.9c2.4.5 3.3-1.1 3.3-2.4v-8.4c-13.5 3-16.3-6.5-16.3-6.5-2.2-5.7-5.4-7.2-5.4-7.2-4.4-3 .3-3 .3-3 4.9.4 7.5 5 7.5 5 4.4 7.5 11.4 5.3 14.2 4.1.4-3.2 1.7-5.3 3.1-6.5-10.8-1.2-22.1-5.4-22.1-24.1 0-5.3 1.9-9.7 5-13.1-.5-1.2-2.2-6.2.5-12.9 0 0 4.1-1.3 13.4 5 3.9-1.1 8.1-1.6 12.2-1.6 4.1 0 8.3.6 12.2 1.6 9.3-6.3 13.4-5 13.4-5 2.7 6.7 1 11.7.5 12.9 3.1 3.4 5 7.8 5 13.1 0 18.8-11.4 22.9-22.2 24.1 1.7 1.5 3.3 4.5 3.3 9v13.3c0 1.3.9 2.9 3.3 2.4C84 89.4 98 71 98 49.2 98 22 76.1 0 49 0Z" fill="#24292F"/></svg>` },
+      { name: 'Slack', bg: '#FEE9F0', svg: `<svg width="18" height="18" viewBox="0 0 270 270"><path d="M99 170a27 27 0 1 1-27-27h27v27Z" fill="#E01E5A"/><path d="M113 170a27 27 0 0 1 54 0v67a27 27 0 0 1-54 0v-67Z" fill="#E01E5A"/><path d="M140 99a27 27 0 1 1 27 27h-27V99Z" fill="#36C5F0"/><path d="M140 113a27 27 0 0 1 0 54H73a27 27 0 0 1 0-54h67Z" fill="#36C5F0"/><path d="M211 140a27 27 0 1 1-27 27v-27h27Z" fill="#2EB67D"/><path d="M197 140a27 27 0 0 1-54 0V73a27 27 0 0 1 54 0v67Z" fill="#2EB67D"/><path d="M170 211a27 27 0 1 1-27-27h27v27Z" fill="#ECB22E"/><path d="M170 197a27 27 0 0 1 0-54h67a27 27 0 0 1 0 54h-67Z" fill="#ECB22E"/></svg>` },
+      { name: 'Atlassian', bg: '#E6F0FF', svg: `<svg width="18" height="18" viewBox="0 0 32 32"><path d="M11.5 15.2c-.4-.5-1.1-.5-1.4 0L4.1 25.8c-.3.5 0 1.2.7 1.2h8.6c.4 0 .7-.2.9-.6 1.4-2.9 1-5.8-2.8-11.2Z" fill="#0052CC"/><path d="M15.6 3.3c-4.5 6.8-4 11.4-1.6 15.6l3.4 6.3c.2.4.6.6.9.6h8.6c.7 0 1-.7.7-1.2L17 3.3c-.3-.5-1.1-.5-1.4 0Z" fill="#2684FF"/></svg>` },
+    ];
+
+    const track = document.getElementById('logo-track');
+    const tripled = [...logos, ...logos, ...logos];
+    tripled.forEach(logo => {
+      const item = document.createElement('div');
+      item.className = 'logo-item';
+      item.innerHTML = `<div class="logo-icon-box" style="background:${logo.bg}">${logo.svg}</div><span class="logo-name">${logo.name}</span>`;
+      track.appendChild(item);
+    });
   </script>
 
+
 </body>
+
 </html>

@@ -11,10 +11,10 @@
     rel="stylesheet" />
   <link rel="stylesheet" href="assets/css/dashboard.css" />
   <link rel="stylesheet" href="assets/css/notification.css" />
+  <link rel="stylesheet" href="assets/css/theme-vars.css" />
 </head>
 
 <body data-theme="blue">
-
   <div class="db">
 
     <!-- ══════════════ SIDEBAR ══════════════ -->
@@ -29,57 +29,57 @@
       </div>
 
       <nav class="sidebar-nav">
-        <div class="nav-item" onclick="location.href='dashboard.html'">
-          <span class="nav-icon">⊞</span> Meu board
-        </div>
-        <div class="nav-item" onclick="location.href='dashboard.html'">
-          <span class="nav-icon">☑</span> Tarefas
-        </div>
-        <div class="nav-item" onclick="location.href='workspace.html'">
-          <span class="nav-icon">🏢</span> Workspaces
-        </div>
-        <div class="nav-item active">
-          <span class="nav-icon">🔔</span> Notificações
-          <span class="nav-badge hidden" id="nav-badge">0</span>
-        </div>
-        <div class="nav-item">
-          <span class="nav-icon">⚙</span> Configurações
-        </div>
+        <div class="nav-item" onclick="location.href='dashboard.html'"><span class="nav-icon">⊞</span> Meu board</div>
+        <div class="nav-item" onclick="location.href='dashboard.html'"><span class="nav-icon">☑</span> Tarefas</div>
+        <div class="nav-item" onclick="location.href='workspace.html'"><span class="nav-icon">🏢</span> Workspaces</div>
+        <div class="nav-item active"><span class="nav-icon">🔔</span> Notificações<span class="nav-badge hidden"
+            id="nav-badge">0</span></div>
+        <div class="nav-item"><span class="nav-icon">⚙</span> Configurações</div>
       </nav>
 
-      <div class="theme-section">
-        <div class="theme-label">Aparência</div>
+      <button class="appearance-trigger" id="appearance-trigger" aria-expanded="false" aria-controls="appearance-panel"
+        onclick="toggleAppearance()">
+        <span class="ap-trigger-icon">✦</span>
+        <span class="ap-trigger-label">Aparência</span>
+        <span class="ap-chevron">▾</span>
+      </button>
+
+      <div class="appearance-panel" id="appearance-panel" role="region" aria-labelledby="appearance-trigger">
+        <div class="ap-section-label">Modo</div>
         <div class="mode-row">
-          <button class="mode-btn active" id="btn-dark-mode" onclick="setMode('dark-mode')">
-            <span>🌙</span> Escuro
-          </button>
-          <button class="mode-btn" id="btn-light-mode" onclick="setMode('light-mode')">
-            <span>☀️</span> Claro
-          </button>
+          <button class="mode-btn active" id="btn-dark-mode" onclick="setMode('dark-mode')">🌙 Escuro</button>
+          <button class="mode-btn" id="btn-light-mode" onclick="setMode('light-mode')">☀️ Claro</button>
         </div>
-        <div class="theme-label" style="margin-top:12px;">Cor do board</div>
-        <div class="theme-options">
-          <button class="theme-btn active" data-theme="blue" style="background:#0052CC"
-            onclick="setTheme('blue',this)"></button>
-          <button class="theme-btn" data-theme="teal" style="background:#008DA6"
-            onclick="setTheme('teal',this)"></button>
-          <button class="theme-btn" data-theme="green" style="background:#0B6E4F"
-            onclick="setTheme('green',this)"></button>
-          <button class="theme-btn" data-theme="purple" style="background:#403294"
-            onclick="setTheme('purple',this)"></button>
-          <button class="theme-btn" data-theme="slate" style="background:#2C3E50"
-            onclick="setTheme('slate',this)"></button>
-          <button class="theme-btn" data-theme="crimson" style="background:#8B1A2B"
-            onclick="setTheme('crimson',this)"></button>
-          <button class="theme-btn" data-theme="midnight" style="background:#1A1A2E"
-            onclick="setTheme('midnight',this)"></button>
+        <div class="ap-section-label" style="margin-top:6px;">Cor do board</div>
+        <div class="color-list" id="color-list">
+          <div class="color-row active" data-theme="blue" onclick="setTheme('blue', this)"><span class="color-swatch"
+              style="background:#0052CC;"></span><span class="color-row-name">Azul</span><span
+              class="color-row-check">✓</span></div>
+          <div class="color-row" data-theme="teal" onclick="setTheme('teal', this)"><span class="color-swatch"
+              style="background:#007A94;"></span><span class="color-row-name">Verde-azulado</span><span
+              class="color-row-check">✓</span></div>
+          <div class="color-row" data-theme="green" onclick="setTheme('green', this)"><span class="color-swatch"
+              style="background:#0B6E4F;"></span><span class="color-row-name">Verde</span><span
+              class="color-row-check">✓</span></div>
+          <div class="color-row" data-theme="purple" onclick="setTheme('purple', this)"><span class="color-swatch"
+              style="background:#403294;"></span><span class="color-row-name">Roxo</span><span
+              class="color-row-check">✓</span></div>
+          <div class="color-row" data-theme="slate" onclick="setTheme('slate', this)"><span class="color-swatch"
+              style="background:#2C3E50;"></span><span class="color-row-name">Slate</span><span
+              class="color-row-check">✓</span></div>
+          <div class="color-row" data-theme="crimson" onclick="setTheme('crimson', this)"><span class="color-swatch"
+              style="background:#8B1A2B;"></span><span class="color-row-name">Vinho</span><span
+              class="color-row-check">✓</span></div>
+          <div class="color-row" data-theme="midnight" onclick="setTheme('midnight', this)"><span class="color-swatch"
+              style="background:#1A1A2E;"></span><span class="color-row-name">Midnight</span><span
+              class="color-row-check">✓</span></div>
         </div>
       </div>
 
       <div class="sidebar-user">
         <div class="user-avatar" id="user-avatar">LH</div>
         <div class="user-info">
-          <div class="user-name" id="user-name">Luiz Henrique</div>
+          <div class="user-name" id="user-name">Carregando...</div>
           <div class="user-role">Developer</div>
         </div>
         <button class="btn-logout" title="Sair" onclick="handleLogout()">⇥</button>
@@ -88,55 +88,40 @@
 
     <!-- ══════════════ MAIN ══════════════ -->
     <div class="main">
-
-      <!-- Topbar -->
       <div class="topbar">
         <span class="topbar-title">🔔 Notificações</span>
-        <button class="btn-new btn-mark-all" id="btn-mark-all" onclick="markAllAsRead()">
-          ✓ Marcar todas como lidas
-        </button>
+        <button class="btn-new btn-mark-all" id="btn-mark-all" onclick="markAllAsRead()">✓ Marcar todas como
+          lidas</button>
       </div>
 
-      <!-- Notifications content -->
       <div class="notif-page">
-
-        <!-- Filter tabs -->
         <div class="notif-filters">
           <button class="filter-btn active" data-filter="all" onclick="setFilter('all',this)">Todas</button>
           <button class="filter-btn" data-filter="unread" onclick="setFilter('unread',this)">Não lidas <span
               class="filter-count" id="filter-unread-count">0</span></button>
           <button class="filter-btn" data-filter="read" onclick="setFilter('read',this)">Lidas</button>
         </div>
-
-        <!-- Loading state -->
         <div class="notif-loading" id="notif-loading">
           <div class="loading-spinner"></div>
           <p>Carregando notificações...</p>
         </div>
-
-        <!-- Empty state -->
         <div class="notif-empty hidden" id="notif-empty">
           <div class="empty-icon">🔕</div>
           <h3>Nenhuma notificação</h3>
-          <p>Você está em dia! Novas notificações aparecerão aqui.</p>
+          <p>Você está em dia!</p>
         </div>
-
-        <!-- Error state -->
         <div class="notif-error hidden" id="notif-error">
           <div class="empty-icon">⚠️</div>
           <h3>Erro ao carregar</h3>
-          <p id="error-detail">Não foi possível conectar ao servidor.</p>
-          <button class="btn-retry" onclick="loadNotifications()">Tentar novamente</button>
+          <p id="error-detail">Não foi possível conectar ao servidor.</p><button class="btn-retry"
+            onclick="loadNotifications()">Tentar novamente</button>
         </div>
-
-        <!-- Notifications list -->
         <div class="notif-list" id="notif-list"></div>
-
       </div>
     </div>
   </div>
 
-  <!-- ══════════════ LOGOUT MODAL ══════════════ -->
+  <!-- LOGOUT MODAL -->
   <div class="modal-overlay hidden" id="logout-overlay">
     <div class="modal logout-modal">
       <div class="logout-icon-wrap">
@@ -148,15 +133,23 @@
       </div>
       <div class="logout-footer">
         <button class="btn-cancel" onclick="closeLogout()">Cancelar</button>
-        <button class="btn-logout-confirm" onclick="confirmLogout()">
-          <span id="logout-label">Sair</span>
-          <span class="spinner hidden" id="logout-spinner"></span>
-        </button>
+        <button class="btn-logout-confirm" onclick="confirmLogout()"><span id="logout-label">Sair</span><span
+            class="spinner hidden" id="logout-spinner"></span></button>
       </div>
     </div>
   </div>
 
+  <script src="assets/js/theme.js"></script>
   <script src="assets/js/notification.js"></script>
+  <script>
+    function toggleAppearance() {
+      const trigger = document.getElementById('appearance-trigger');
+      const panel = document.getElementById('appearance-panel');
+      const isOpen = panel.classList.contains('open');
+      panel.classList.toggle('open', !isOpen);
+      trigger.setAttribute('aria-expanded', String(!isOpen));
+    }
+  </script>
 </body>
 
 </html>

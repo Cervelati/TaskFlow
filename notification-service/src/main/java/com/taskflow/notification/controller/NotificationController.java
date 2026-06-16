@@ -73,4 +73,11 @@ public class NotificationController {
         emailService.sendEmail(to, subject, text);
         return ResponseEntity.ok("E-mail enviado.");
     }
+
+    // ── DELETE /api/notifications/{id}
+    @DeleteMapping("/api/notifications/{id}")
+    public ResponseEntity<Void> delete(@PathVariable Long id) {
+        notificationService.delete(id);
+        return ResponseEntity.noContent().build();
+    }
 }

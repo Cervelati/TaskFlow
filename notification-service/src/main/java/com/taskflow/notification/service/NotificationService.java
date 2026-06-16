@@ -95,4 +95,8 @@ public class NotificationService {
     private String resolveUserEmail(Long userId) {
         return "usuario@exemplo.com";
     }
+
+    public void delete(Long id) {
+    notificationRepository.deleteById(id);
+    }
 }

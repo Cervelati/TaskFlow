@@ -1,0 +1,102 @@
+/* ════════════════════════════════════════
+   TaskFlow – workspace-board.css
+   ════════════════════════════════════════ */
+
+/* ── TOPBAR EXTRAS ── */
+.topbar-left {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.topbar-right {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.btn-back {
+    font-family: var(--font);
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--text-secondary);
+    background: rgba(255,255,255,.15);
+    border: none;
+    padding: 5px 10px;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background .15s, color .15s;
+}
+.btn-back:hover { background: rgba(255,255,255,.25); color: var(--text-primary); }
+
+body[data-theme="light"] .btn-back { background: #F4F5F7; color: #42526E; }
+body[data-theme="light"] .btn-back:hover { background: #DFE1E6; color: #172B4D; }
+
+.topbar-sep {
+    color: var(--text-secondary);
+    font-size: 14px;
+}
+
+.board-role-badge {
+    font-size: 10px;
+    font-weight: 700;
+    padding: 3px 8px;
+    border-radius: 100px;
+    background: rgba(255,255,255,.2);
+    color: var(--text-primary);
+}
+
+/* ── BOARD MEMBERS ── */
+.board-members {
+    display: flex;
+    align-items: center;
+}
+
+.board-avatar {
+    width: 28px; height: 28px;
+    border-radius: 50%;
+    border: 2px solid rgba(255,255,255,.4);
+    font-size: 10px; font-weight: 700;
+    color: white;
+    display: flex; align-items: center; justify-content: center;
+    margin-left: -6px;
+    flex-shrink: 0;
+    cursor: default;
+}
+.board-avatar:first-child { margin-left: 0; }
+
+.board-avatar-more {
+    width: 28px; height: 28px;
+    border-radius: 50%;
+    border: 2px solid rgba(255,255,255,.4);
+    background: rgba(255,255,255,.2);
+    font-size: 10px; font-weight: 700;
+    color: var(--text-primary);
+    display: flex; align-items: center; justify-content: center;
+    margin-left: -6px;
+}
+
+/* ── LOADING ── */
+.board-loading {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    height: 300px;
+    color: var(--text-secondary);
+    font-size: 14px;
+}
+
+.ws-spinner {
+    width: 32px; height: 32px;
+    border: 3px solid rgba(255,255,255,.2);
+    border-top-color: rgba(255,255,255,.8);
+    border-radius: 50%;
+    animation: spin .7s linear infinite;
+}
+
+body[data-theme="light"] .ws-spinner {
+    border-color: rgba(0,0,0,.1);
+    border-top-color: #0052CC;
+}

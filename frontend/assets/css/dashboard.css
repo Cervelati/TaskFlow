@@ -1,6 +1,5 @@
 /* ════════════════════════════════════════
    TaskFlow – dashboard.css
-   Kanban board stylesheet
    ════════════════════════════════════════ */
 
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -57,16 +56,43 @@ body[data-theme="light"] .logo-icon      { background: #0052CC; }
 body[data-theme="light"] .logo-col       { background: white; }
 body[data-theme="light"] .user-name      { color: #172B4D; }
 body[data-theme="light"] .user-role      { color: #42526E; }
-body[data-theme="light"] .theme-label    { color: #42526E; }
 body[data-theme="light"] .btn-logout     { color: #42526E; }
 body[data-theme="light"] .topbar-title   { color: #172B4D; }
 body[data-theme="light"] .col-title      { color: #172B4D; }
 body[data-theme="light"] .col-count      { background: rgba(0,0,0,.1); color: #42526E; }
 body[data-theme="light"] .add-card-btn   { color: #42526E; }
 body[data-theme="light"] .sidebar-user   { border-top: 1px solid #DFE1E6; }
-body[data-theme="light"] .theme-section  { border-top: 1px solid #DFE1E6; }
-body[data-theme="light"] .mode-btn       { color: #42526E; border-color: #DFE1E6; }
-body[data-theme="light"] .mode-btn.active{ background: #0065FF; color: white; border-color: #0065FF; }
+
+/* Light mode: appearance trigger button */
+body[data-theme="light"] .appearance-trigger {
+  color: #42526E;
+  border-top-color: #DFE1E6;
+}
+body[data-theme="light"] .appearance-trigger:hover {
+  background: #F4F5F7;
+  color: #172B4D;
+}
+body[data-theme="light"] .appearance-panel {
+  border-top-color: #DFE1E6;
+  background: #FAFBFC;
+}
+body[data-theme="light"] .ap-section-label { color: #6B778C; }
+body[data-theme="light"] .mode-btn {
+  color: #42526E;
+  border-color: #DFE1E6;
+}
+body[data-theme="light"] .mode-btn.active {
+  background: #0065FF;
+  color: white;
+  border-color: #0065FF;
+}
+body[data-theme="light"] .color-row { color: #42526E; }
+body[data-theme="light"] .color-row:hover { background: rgba(0,0,0,.05); color: #172B4D; }
+body[data-theme="light"] .color-row.active { background: #E6F0FF; color: #172B4D; }
+body[data-theme="light"] .color-row-name { color: inherit; }
+body[data-theme="light"] .ap-chevron { color: #6B778C; }
+body[data-theme="light"] .ap-trigger-label { color: #42526E; }
+body[data-theme="light"] .ap-trigger-icon { color: #6B778C; }
 
 body { font-family: var(--font); }
 
@@ -89,6 +115,8 @@ body { font-family: var(--font); }
   display: flex;
   flex-direction: column;
   border-right: 1px solid var(--border);
+  overflow-y: auto;
+  overflow-x: hidden;
 }
 
 .sidebar-logo {
@@ -127,63 +155,176 @@ body { font-family: var(--font); }
 .nav-icon { font-size: 14px; width: 18px; text-align: center; }
 
 /* ══════════════════════════════════════════════════
-   THEME / MODE SECTION
+   APPEARANCE — accordion
    ══════════════════════════════════════════════════ */
-.theme-section {
-  padding: 12px 14px;
+
+/* Trigger button — always visible at bottom of nav */
+.appearance-trigger {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+  padding: 10px 14px;
+  background: none;
+  border: none;
   border-top: 1px solid var(--border);
-}
-
-.theme-label {
-  font-size: 10px; font-weight: 700;
-  text-transform: uppercase; letter-spacing: .06em;
+  cursor: pointer;
+  font-family: var(--font);
+  font-size: 12px;
+  font-weight: 600;
   color: var(--text-secondary);
-  margin-bottom: 8px;
+  text-align: left;
+  transition: background .15s, color .15s;
+  flex-shrink: 0;
+}
+.appearance-trigger:hover {
+  background: var(--nav-active);
+  color: var(--text-primary);
 }
 
-/* Dark / Light toggle row */
+.ap-trigger-icon {
+  font-size: 15px;
+  color: var(--text-secondary);
+  flex-shrink: 0;
+}
+
+.ap-trigger-label {
+  flex: 1;
+  color: var(--text-secondary);
+}
+
+.ap-chevron {
+  font-size: 11px;
+  color: var(--text-secondary);
+  transition: transform .22s ease;
+  flex-shrink: 0;
+}
+
+/* Rotate chevron when open */
+.appearance-trigger[aria-expanded="true"] .ap-chevron {
+  transform: rotate(180deg);
+}
+
+/* Panel — slides open */
+.appearance-panel {
+  overflow: hidden;
+  max-height: 0;
+  transition: max-height .28s cubic-bezier(.4,0,.2,1),
+              opacity .22s ease,
+              padding .22s ease;
+  opacity: 0;
+  border-top: 1px solid transparent;
+  background: rgba(0,0,0,.12);
+  flex-shrink: 0;
+}
+
+.appearance-panel.open {
+  max-height: 380px;
+  opacity: 1;
+  border-top-color: var(--border);
+  padding: 10px 0 4px;
+}
+
+/* Section label inside panel */
+.ap-section-label {
+  font-size: 9px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: .07em;
+  color: rgba(255,255,255,.45);
+  padding: 0 14px;
+  margin-bottom: 5px;
+}
+
+/* Dark / Light toggle */
 .mode-row {
-  display: flex; gap: 6px;
-  margin-bottom: 4px;
+  display: flex;
+  gap: 5px;
+  padding: 0 10px;
+  margin-bottom: 10px;
 }
 
 .mode-btn {
   flex: 1;
   font-family: var(--font);
-  font-size: 11px; font-weight: 700;
-  padding: 6px 4px;
+  font-size: 11px;
+  font-weight: 600;
+  padding: 5px 4px;
   border-radius: 6px;
-  border: 1.5px solid rgba(255,255,255,.25);
+  border: 1px solid rgba(255,255,255,.2);
   background: transparent;
   color: var(--text-secondary);
   cursor: pointer;
-  display: flex; align-items: center; justify-content: center; gap: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
   transition: all .15s;
 }
-.mode-btn:hover { color: var(--text-primary); border-color: rgba(255,255,255,.5); }
+.mode-btn:hover {
+  color: var(--text-primary);
+  border-color: rgba(255,255,255,.4);
+}
 .mode-btn.active {
   background: rgba(255,255,255,.9);
   color: #172B4D;
   border-color: transparent;
 }
 
-/* Colour swatches */
-.theme-options {
-  display: flex; gap: 7px; flex-wrap: wrap;
+/* Color rows — Notion/Linear style */
+.color-list {
+  display: flex;
+  flex-direction: column;
+  padding: 0 6px;
+  margin-bottom: 6px;
 }
 
-.theme-btn {
-  width: 26px; height: 26px;
-  border-radius: 50%;
-  border: 2.5px solid transparent;
+.color-row {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  padding: 5px 8px;
+  border-radius: 6px;
   cursor: pointer;
-  transition: all .15s;
-  outline: none;
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--text-secondary);
+  transition: background .12s, color .12s;
+  user-select: none;
 }
-.theme-btn:hover { transform: scale(1.15); }
-.theme-btn.active {
-  border-color: var(--theme-check);
-  box-shadow: 0 0 0 2px rgba(255,255,255,.35);
+
+.color-row:hover {
+  background: rgba(255,255,255,.12);
+  color: var(--text-primary);
+}
+
+.color-row.active {
+  background: rgba(255,255,255,.18);
+  color: var(--text-primary);
+}
+
+.color-swatch {
+  width: 13px;
+  height: 13px;
+  border-radius: 3px;
+  flex-shrink: 0;
+  border: 1px solid rgba(0,0,0,.12);
+}
+
+.color-row-name {
+  flex: 1;
+  color: inherit;
+}
+
+.color-row-check {
+  font-size: 11px;
+  opacity: 0;
+  transition: opacity .12s;
+  color: var(--text-primary);
+}
+
+.color-row.active .color-row-check {
+  opacity: 1;
 }
 
 /* ══════════════════════════════════════════════════
@@ -193,6 +334,7 @@ body { font-family: var(--font); }
   padding: 12px 16px;
   border-top: 1px solid var(--border);
   display: flex; align-items: center; gap: 8px;
+  flex-shrink: 0;
 }
 
 .user-avatar {
@@ -530,3 +672,15 @@ body { font-family: var(--font); }
 }
 .btn-logout-confirm:hover    { background: #BF2600; }
 .btn-logout-confirm:disabled { opacity: .6; cursor: not-allowed; }
+
+.card-desc {
+  font-size: 12px;
+  color: var(--card-meta);
+  margin-bottom: 8px;
+  line-height: 1.5;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+

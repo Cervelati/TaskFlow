@@ -22,9 +22,9 @@ public class TasksController : ControllerBase
 
     /// <summary>Lista todas as tarefas do usuário autenticado</summary>
     [HttpGet]
-    public async Task<IActionResult> GetAll()
+    public async Task<IActionResult> GetAll([FromQuery] int? workspaceId = null)
     {
-        var tasks = await _taskService.GetAllAsync(UserId);
+        var tasks = await _taskService.GetAllAsync(UserId, workspaceId);
         return Ok(tasks);
     }
 
@@ -33,10 +33,8 @@ public class TasksController : ControllerBase
     public async Task<IActionResult> GetById(int id)
     {
         var task = await _taskService.GetByIdAsync(id, UserId);
-
         if (task is null)
             return NotFound(new { message = "Tarefa não encontrada." });
-
         return Ok(task);
     }
 
@@ -53,10 +51,8 @@ public class TasksController : ControllerBase
     public async Task<IActionResult> Update(int id, UpdateTaskRequest request)
     {
         var task = await _taskService.UpdateAsync(id, request, UserId);
-
         if (task is null)
             return NotFound(new { message = "Tarefa não encontrada." });
-
         return Ok(task);
     }
 
@@ -65,10 +61,8 @@ public class TasksController : ControllerBase
     public async Task<IActionResult> Delete(int id)
     {
         var deleted = await _taskService.DeleteAsync(id, UserId);
-
         if (!deleted)
             return NotFound(new { message = "Tarefa não encontrada." });
-
         return NoContent();
     }
 }

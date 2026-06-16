@@ -12,7 +12,8 @@ public record UpdateTaskRequest(
     string Title,
     string Description,
     bool IsCompleted,
-    DateTime? DueDate
+    DateTime? DueDate,
+    string? Status
 );
 
 public record TaskResponse(
@@ -22,5 +23,7 @@ public record TaskResponse(
     bool IsCompleted,
     DateTime CreatedAt,
     DateTime? DueDate,
-    int UserId
+    int UserId,
+    string Status,
+    int? WorkspaceId
 );

@@ -117,21 +117,23 @@ body[data-theme="light"] .ws-spinner {
 .ws-stat-icon { font-size: 13px; }
 
 .ws-card-footer {
-    padding: 10px 16px;
+    padding: 10px 12px;
     border-top: 1px solid rgba(0,0,0,.06);
     display: flex;
-    gap: 6px;
+    gap: 4px;
+    flex-wrap: wrap;
 }
 
 .ws-btn {
     font-family: var(--font);
     font-size: 11px;
     font-weight: 700;
-    padding: 5px 10px;
+    padding: 5px 8px;
     border-radius: 5px;
     border: none;
     cursor: pointer;
     transition: background .15s;
+    white-space: nowrap;
 }
 
 .ws-btn-primary   { background: #E6F0FF; color: #0052CC; }

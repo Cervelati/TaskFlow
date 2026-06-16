@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="pt-BR" data-theme="blue">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>TaskFlow – Board do Workspace</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap"
+        rel="stylesheet" />
+    <link rel="stylesheet" href="assets/css/dashboard.css" />
+    <link rel="stylesheet" href="assets/css/workspaceBoard.css" />
+    <link rel="stylesheet" href="assets/css/theme-vars.css" />
+</head>
+
+<body data-theme="blue">
+
+    <div class="db">
+
+        <!-- ══════════════ SIDEBAR ══════════════ -->
+        <aside class="sidebar">
+
+            <div class="sidebar-logo">
+                <div class="logo-icon">
+                    <div class="logo-col"></div>
+                    <div class="logo-col"></div>
+                    <div class="logo-col"></div>
+                </div>
+                <span class="logo-text">TaskFlow</span>
+            </div>
+
+            <nav class="sidebar-nav">
+                <div class="nav-item" onclick="location.href='dashboard.html'">
+                    <span class="nav-icon">⊞</span> Meu board
+                </div>
+                <div class="nav-item" onclick="location.href='dashboard.html'">
+                    <span class="nav-icon">☑</span> Tarefas
+                </div>
+                <div class="nav-item active" onclick="location.href='workspace.html'">
+                    <span class="nav-icon">🏢</span> Workspaces
+                </div>
+                <div class="nav-item" onclick="location.href='notification.html'">
+                    <span class="nav-icon">🔔</span> Notificações
+                </div>
+                <div class="nav-item">
+                    <span class="nav-icon">⚙</span> Configurações
+                </div>
+            </nav>
+
+            <div class="theme-section">
+                <div class="theme-label">Aparência</div>
+                <div class="mode-row">
+                    <button class="mode-btn active" id="btn-dark-mode" onclick="setMode('dark-mode')">
+                        <span>🌙</span> Escuro
+                    </button>
+                    <button class="mode-btn" id="btn-light-mode" onclick="setMode('light-mode')">
+                        <span>☀️</span> Claro
+                    </button>
+                </div>
+                <div class="theme-label" style="margin-top:12px;">Cor do board</div>
+                <div class="theme-options">
+                    <button class="theme-btn active" data-theme="blue" style="background:#0052CC"
+                        onclick="setTheme('blue',this)"></button>
+                    <button class="theme-btn" data-theme="teal" style="background:#008DA6"
+                        onclick="setTheme('teal',this)"></button>
+                    <button class="theme-btn" data-theme="green" style="background:#0B6E4F"
+                        onclick="setTheme('green',this)"></button>
+                    <button class="theme-btn" data-theme="purple" style="background:#403294"
+                        onclick="setTheme('purple',this)"></button>
+                    <button class="theme-btn" data-theme="slate" style="background:#2C3E50"
+                        onclick="setTheme('slate',this)"></button>
+                    <button class="theme-btn" data-theme="crimson" style="background:#8B1A2B"
+                        onclick="setTheme('crimson',this)"></button>
+                    <button class="theme-btn" data-theme="midnight" style="background:#1A1A2E"
+                        onclick="setTheme('midnight',this)"></button>
+                </div>
+            </div>
+
+            <div class="sidebar-user">
+                <div class="user-avatar" id="user-avatar">?</div>
+                <div class="user-info">
+                    <div class="user-name" id="user-name">Carregando...</div>
+                    <div class="user-role" id="user-role">Membro</div>
+                </div>
+                <button class="btn-logout" title="Sair" onclick="handleLogout()">⇥</button>
+            </div>
+
+        </aside>
+
+        <!-- ══════════════ MAIN ══════════════ -->
+        <div class="main">
+
+            <div class="topbar">
+                <div class="topbar-left">
+                    <button class="btn-back" onclick="location.href='workspace.html'">← Workspaces</button>
+                    <span class="topbar-sep">/</span>
+                    <span class="topbar-title" id="board-title">Carregando...</span>
+                    <span class="board-role-badge hidden" id="board-role-badge"></span>
+                </div>
+                <div class="topbar-right">
+                    <div class="board-members" id="board-members"></div>
+                    <button class="btn-new" id="btn-new-task" onclick="openModal()">+ Nova tarefa</button>
+                </div>
+            </div>
+
+            <!-- Loading -->
+            <div class="board-loading" id="board-loading">
+                <div class="ws-spinner"></div>
+                <span>Carregando board...</span>
+            </div>
+
+            <!-- Kanban -->
+            <div class="kanban hidden" id="kanban-board">
+
+                <div class="column" id="col-todo" data-col="Todo">
+                    <div class="col-header">
+                        <span class="col-title">🚀 A fazer</span>
+                        <span class="col-count" id="count-todo">0</span>
+                    </div>
+                    <div class="cards-list" id="list-todo"></div>
+                    <button class="add-card-btn" onclick="openModal('Todo')">+ Adicionar tarefa</button>
+                </div>
+
+                <div class="column" id="col-progress" data-col="InProgress">
+                    <div class="col-header">
+                        <span class="col-title">⚡ Em andamento</span>
+                        <span class="col-count" id="count-progress">0</span>
+                    </div>
+                    <div class="cards-list" id="list-progress"></div>
+                    <button class="add-card-btn" onclick="openModal('InProgress')">+ Adicionar tarefa</button>
+                </div>
+
+                <div class="column" id="col-done" data-col="Done">
+                    <div class="col-header">
+                        <span class="col-title">✅ Concluído</span>
+                        <span class="col-count" id="count-done">0</span>
+                    </div>
+                    <div class="cards-list" id="list-done"></div>
+                    <button class="add-card-btn" onclick="openModal('Done')">+ Adicionar tarefa</button>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <!-- ══════════════ MODAL TAREFA ══════════════ -->
+    <div class="modal-overlay hidden" id="modal-overlay" onclick="handleOverlayClick(event)">
+        <div class="modal">
+            <div class="modal-header">
+                <h3 id="modal-title">Nova tarefa</h3>
+                <button class="modal-close" onclick="closeModal()">✕</button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label for="task-title">Título *</label>
+                    <input type="text" id="task-title" placeholder="Descreva a tarefa..." maxlength="120" />
+                </div>
+                <div class="form-group">
+                    <label for="task-desc">Descrição</label>
+                    <textarea id="task-desc" rows="3" placeholder="Detalhes da tarefa..."></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="task-date">Data limite</label>
+                    <input type="date" id="task-date" />
+                </div>
+                <div class="form-group">
+                    <label for="task-col">Coluna</label>
+                    <select id="task-col">
+                        <option value="Todo">A fazer</option>
+                        <option value="InProgress">Em andamento</option>
+                        <option value="Done">Concluído</option>
+                    </select>
+                </div>
+                <div class="error-msg" id="error-msg">⚠ O título é obrigatório.</div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn-cancel" onclick="closeModal()">Cancelar</button>
+                <button class="btn-save" id="btn-save" onclick="saveTask()">
+                    <span id="save-label">Salvar tarefa</span>
+                    <span class="spinner hidden" id="save-spinner"></span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ══════════════ LOGOUT MODAL ══════════════ -->
+    <div class="modal-overlay hidden" id="logout-overlay">
+        <div class="modal logout-modal">
+            <div class="logout-icon-wrap">
+                <div class="logout-icon">⇥</div>
+            </div>
+            <div class="logout-body">
+                <h3 class="logout-title">Sair da conta?</h3>
+                <p class="logout-desc">Você será redirecionado para a página de login.</p>
+            </div>
+            <div class="logout-footer">
+                <button class="btn-cancel" onclick="closeLogout()">Cancelar</button>
+                <button class="btn-logout-confirm" onclick="confirmLogout()">
+                    <span id="logout-label">Sair</span>
+                    <span class="spinner hidden" id="logout-spinner"></span>
+                </button>
+            </div>
+        </div>
+    </div>
+    <!-- ══════════════ MODAL DELETAR TAREFA ══════════════ -->
+    <div class="modal-overlay hidden" id="modal-delete-task">
+        <div class="modal logout-modal">
+            <div class="logout-icon-wrap">
+                <div class="logout-icon" style="background:#FFEBE6;color:#BF2600;">🗑</div>
+            </div>
+            <div class="logout-body">
+                <h3 class="logout-title">Remover tarefa?</h3>
+                <p class="logout-desc">Esta ação não pode ser desfeita.</p>
+            </div>
+            <div class="logout-footer">
+                <button class="btn-cancel" onclick="closeDeleteModal()">Cancelar</button>
+                <button class="btn-logout-confirm" onclick="confirmDeleteTask()">Remover</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="assets/js/workspaceBoard.js"></script>
+    <script src="assets/js/theme.js"></script>
+</body>
+
+</html>
