@@ -7,163 +7,275 @@
     <title>TaskFlow – Workspaces</title>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap"
+        rel="stylesheet" />
     <link rel="stylesheet" href="assets/css/dashboard.css" />
     <link rel="stylesheet" href="assets/css/workspace.css" />
     <link rel="stylesheet" href="assets/css/theme-vars.css" />
 </head>
 
 <body data-theme="blue">
-<div class="db">
+    <div class="db">
 
-    <!-- ══════════════ SIDEBAR ══════════════ -->
-    <aside class="sidebar">
-        <div class="sidebar-logo">
-            <div class="logo-icon"><div class="logo-col"></div><div class="logo-col"></div><div class="logo-col"></div></div>
-            <span class="logo-text">TaskFlow</span>
-        </div>
-
-        <nav class="sidebar-nav">
-            <div class="nav-item" onclick="location.href='dashboard.html'"><span class="nav-icon">⊞</span> Meu board</div>
-            <div class="nav-item" onclick="location.href='dashboard.html'"><span class="nav-icon">☑</span> Tarefas</div>
-            <div class="nav-item active"><span class="nav-icon">🏢</span> Workspaces</div>
-            <div class="nav-item" onclick="location.href='notification.html'"><span class="nav-icon">🔔</span> Notificações</div>
-            <div class="nav-item"><span class="nav-icon">⚙</span> Configurações</div>
-        </nav>
-
-        <button class="appearance-trigger" id="appearance-trigger" aria-expanded="false" aria-controls="appearance-panel" onclick="toggleAppearance()">
-            <span class="ap-trigger-icon">✦</span>
-            <span class="ap-trigger-label">Aparência</span>
-            <span class="ap-chevron">▾</span>
-        </button>
-
-        <div class="appearance-panel" id="appearance-panel" role="region" aria-labelledby="appearance-trigger">
-            <div class="ap-section-label">Modo</div>
-            <div class="mode-row">
-                <button class="mode-btn active" id="btn-dark-mode" onclick="setMode('dark-mode')">🌙 Escuro</button>
-                <button class="mode-btn" id="btn-light-mode" onclick="setMode('light-mode')">☀️ Claro</button>
+        <!-- SIDEBAR -->
+        <aside class="sidebar">
+            <div class="sidebar-logo">
+                <div class="logo-icon">
+                    <div class="logo-col"></div>
+                    <div class="logo-col"></div>
+                    <div class="logo-col"></div>
+                </div>
+                <span class="logo-text">TaskFlow</span>
             </div>
-            <div class="ap-section-label" style="margin-top:6px;">Cor do board</div>
-            <div class="color-list" id="color-list">
-                <div class="color-row active" data-theme="blue" onclick="setTheme('blue', this)"><span class="color-swatch" style="background:#0052CC;"></span><span class="color-row-name">Azul</span><span class="color-row-check">✓</span></div>
-                <div class="color-row" data-theme="teal" onclick="setTheme('teal', this)"><span class="color-swatch" style="background:#007A94;"></span><span class="color-row-name">Verde-azulado</span><span class="color-row-check">✓</span></div>
-                <div class="color-row" data-theme="green" onclick="setTheme('green', this)"><span class="color-swatch" style="background:#0B6E4F;"></span><span class="color-row-name">Verde</span><span class="color-row-check">✓</span></div>
-                <div class="color-row" data-theme="purple" onclick="setTheme('purple', this)"><span class="color-swatch" style="background:#403294;"></span><span class="color-row-name">Roxo</span><span class="color-row-check">✓</span></div>
-                <div class="color-row" data-theme="slate" onclick="setTheme('slate', this)"><span class="color-swatch" style="background:#2C3E50;"></span><span class="color-row-name">Slate</span><span class="color-row-check">✓</span></div>
-                <div class="color-row" data-theme="crimson" onclick="setTheme('crimson', this)"><span class="color-swatch" style="background:#8B1A2B;"></span><span class="color-row-name">Vinho</span><span class="color-row-check">✓</span></div>
-                <div class="color-row" data-theme="midnight" onclick="setTheme('midnight', this)"><span class="color-swatch" style="background:#1A1A2E;"></span><span class="color-row-name">Midnight</span><span class="color-row-check">✓</span></div>
+            <nav class="sidebar-nav">
+                <div class="nav-item" onclick="location.href='dashboard.html'"><span class="nav-icon">⊞</span> Meu board
+                </div>
+                <div class="nav-item" onclick="location.href='tasks.html'">☑ Tarefas
+                    <span class="nav-badge hidden" id="nav-tasks-badge">0</span>
+                </div>
+                <div class="nav-item active"><span class="nav-icon">🏢</span> Workspaces</div>
+                <div class="nav-item" onclick="location.href='notification.html'"><span class="nav-icon">🔔</span>
+                    Notificações</div>
+                <div class="nav-item" onclick="location.href='settings.html'"><span class="nav-icon">⚙</span>
+                    Configurações</div>
+            </nav>
+            <button class="appearance-trigger" id="appearance-trigger" aria-expanded="false"
+                aria-controls="appearance-panel" onclick="toggleAppearance()">
+                <span class="ap-trigger-icon">✦</span>
+                <span class="ap-trigger-label">Aparência</span>
+                <span class="ap-chevron">▾</span>
+            </button>
+            <div class="appearance-panel" id="appearance-panel" role="region" aria-labelledby="appearance-trigger">
+                <div class="ap-section-label">Modo</div>
+                <div class="mode-row">
+                    <button class="mode-btn active" id="btn-dark-mode" onclick="setMode('dark-mode')">🌙 Escuro</button>
+                    <button class="mode-btn" id="btn-light-mode" onclick="setMode('light-mode')">☀️ Claro</button>
+                </div>
+                <div class="ap-section-label" style="margin-top:6px;">Cor do board</div>
+                <div class="color-list" id="color-list">
+                    <div class="color-row active" data-theme="blue" onclick="setTheme('blue', this)"><span
+                            class="color-swatch" style="background:#0052CC;"></span><span
+                            class="color-row-name">Azul</span><span class="color-row-check">✓</span></div>
+                    <div class="color-row" data-theme="teal" onclick="setTheme('teal', this)"><span class="color-swatch"
+                            style="background:#007A94;"></span><span class="color-row-name">Verde-azulado</span><span
+                            class="color-row-check">✓</span></div>
+                    <div class="color-row" data-theme="green" onclick="setTheme('green', this)"><span
+                            class="color-swatch" style="background:#0B6E4F;"></span><span
+                            class="color-row-name">Verde</span><span class="color-row-check">✓</span></div>
+                    <div class="color-row" data-theme="purple" onclick="setTheme('purple', this)"><span
+                            class="color-swatch" style="background:#403294;"></span><span
+                            class="color-row-name">Roxo</span><span class="color-row-check">✓</span></div>
+                    <div class="color-row" data-theme="slate" onclick="setTheme('slate', this)"><span
+                            class="color-swatch" style="background:#2C3E50;"></span><span
+                            class="color-row-name">Slate</span><span class="color-row-check">✓</span></div>
+                    <div class="color-row" data-theme="crimson" onclick="setTheme('crimson', this)"><span
+                            class="color-swatch" style="background:#8B1A2B;"></span><span
+                            class="color-row-name">Vinho</span><span class="color-row-check">✓</span></div>
+                    <div class="color-row" data-theme="midnight" onclick="setTheme('midnight', this)"><span
+                            class="color-swatch" style="background:#1A1A2E;"></span><span
+                            class="color-row-name">Midnight</span><span class="color-row-check">✓</span></div>
+                </div>
+            </div>
+            <div class="sidebar-user">
+                <div class="user-avatar" id="user-avatar">LH</div>
+                <div class="user-info">
+                    <div class="user-name" id="user-name">Luiz</div>
+                    <div class="user-meta">
+                        <div class="user-role" id="user-role">Owner</div>
+                        <span class="plan-badge free" id="plan-badge">Free</span>
+                    </div>
+                </div>
+                <button class="btn-logout" title="Sair" onclick="handleLogout()">⇥</button>
+            </div>
+        </aside>
+
+        <!-- MAIN -->
+        <div class="main">
+            <div class="topbar">
+                <span class="topbar-title">Workspaces</span>
+                <button class="btn-new" id="btn-new-workspace" onclick="openCreateModal()">+ Novo workspace</button>
+            </div>
+            <div class="ws-content" id="ws-content">
+                <div class="ws-loading" id="ws-loading">
+                    <div class="ws-spinner"></div>
+                    <span>Carregando workspaces...</span>
+                </div>
+                <div class="ws-grid hidden" id="ws-grid"></div>
+                <div class="ws-empty hidden" id="ws-empty">
+                    <div class="ws-empty-icon">□</div>
+                    <h3>Nenhum workspace ainda</h3>
+                    <p>Crie seu primeiro workspace para colaborar com sua equipe.</p>
+                    <button class="btn-save" onclick="openCreateModal()">Criar workspace</button>
+                </div>
             </div>
         </div>
+    </div>
 
-        <div class="sidebar-user">
-            <div class="user-avatar" id="user-avatar">?</div>
-            <div class="user-info">
-                <div class="user-name" id="user-name">Carregando...</div>
-                <div class="user-role">Developer</div>
+    <!-- MODAL CRIAR/EDITAR WORKSPACE -->
+    <div class="modal-overlay hidden" id="modal-workspace" onclick="handleOverlayClick(event,'modal-workspace')">
+        <div class="modal">
+            <div class="modal-header">
+                <h3 id="modal-ws-title">Novo workspace</h3>
+                <button class="modal-close" onclick="closeModal('modal-workspace')">✕</button>
             </div>
-            <button class="btn-logout" title="Sair" onclick="handleLogout()">⇥</button>
-        </div>
-    </aside>
-
-    <!-- ══════════════ MAIN ══════════════ -->
-    <div class="main">
-        <div class="topbar">
-            <span class="topbar-title">🏢 Workspaces</span>
-            <button class="btn-new" id="btn-new-workspace" onclick="openCreateModal()">+ Novo workspace</button>
-        </div>
-
-        <div class="ws-content" id="ws-content">
-            <div class="ws-loading" id="ws-loading"><div class="ws-spinner"></div><span>Carregando workspaces...</span></div>
-            <div class="ws-grid hidden" id="ws-grid"></div>
-            <div class="ws-empty hidden" id="ws-empty">
-                <div class="ws-empty-icon">🏢</div>
-                <h3>Nenhum workspace ainda</h3>
-                <p>Crie seu primeiro workspace para colaborar com sua equipe.</p>
-                <button class="btn-save" onclick="openCreateModal()">+ Criar workspace</button>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label for="ws-name">Nome *</label>
+                    <input type="text" id="ws-name" placeholder="Ex: Projeto Final, Equipe Dev..." maxlength="60" />
+                </div>
+                <div class="form-group">
+                    <label for="ws-desc">Descrição</label>
+                    <textarea id="ws-desc" rows="3" placeholder="Descreva o propósito deste workspace..."
+                        maxlength="200"></textarea>
+                </div>
+                <div class="form-group">
+                    <label>Modo de conclusão de tarefas</label>
+                    <div class="completion-mode-options">
+                        <label class="completion-option active" id="opt-column"
+                            onclick="selectCompletionMode('column', this)">
+                            <div class="completion-option-icon">▦</div>
+                            <div>
+                                <div class="completion-option-title">Coluna de conclusão</div>
+                                <div class="completion-option-desc">Tarefas concluídas vão para uma coluna específica
+                                </div>
+                            </div>
+                        </label>
+                        <label class="completion-option" id="opt-checkbox"
+                            onclick="selectCompletionMode('checkbox', this)">
+                            <div class="completion-option-icon">✔</div>
+                            <div>
+                                <div class="completion-option-title">Checkbox no card</div>
+                                <div class="completion-option-desc">Marque tarefas como concluídas em qualquer coluna
+                                </div>
+                            </div>
+                        </label>
+                    </div>
+                    <input type="hidden" id="ws-completion-mode" value="column" />
+                </div>
+                <div class="plan-note">Plano gratuito: até <strong>3 workspaces</strong> por usuário.</div>
+                <div class="error-msg" id="error-ws">O nome é obrigatório.</div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn-cancel" onclick="closeModal('modal-workspace')">Cancelar</button>
+                <button class="btn-save" id="btn-save-ws" onclick="saveWorkspace()">
+                    <span id="save-ws-label">Criar workspace</span>
+                    <span class="spinner hidden" id="save-ws-spinner"></span>
+                </button>
             </div>
         </div>
     </div>
-</div>
 
-<!-- MODAL CRIAR/EDITAR -->
-<div class="modal-overlay hidden" id="modal-workspace" onclick="handleOverlayClick(event,'modal-workspace')">
-    <div class="modal">
-        <div class="modal-header"><h3 id="modal-ws-title">Novo workspace</h3><button class="modal-close" onclick="closeModal('modal-workspace')">✕</button></div>
-        <div class="modal-body">
-            <div class="form-group"><label for="ws-name">Nome *</label><input type="text" id="ws-name" placeholder="Ex: Projeto Final, Equipe Dev..." maxlength="60" /></div>
-            <div class="form-group"><label for="ws-desc">Descrição</label><textarea id="ws-desc" rows="3" placeholder="Descreva o propósito deste workspace..." maxlength="200"></textarea></div>
-            <div class="plan-note"><span>📌</span> Plano gratuito: até <strong>3 workspaces</strong> por usuário.</div>
-            <div class="error-msg" id="error-ws">⚠ O nome é obrigatório.</div>
-        </div>
-        <div class="modal-footer">
-            <button class="btn-cancel" onclick="closeModal('modal-workspace')">Cancelar</button>
-            <button class="btn-save" id="btn-save-ws" onclick="saveWorkspace()"><span id="save-ws-label">Criar workspace</span><span class="spinner hidden" id="save-ws-spinner"></span></button>
+    <!-- MODAL CONVIDAR -->
+    <div class="modal-overlay hidden" id="modal-invite" onclick="handleOverlayClick(event,'modal-invite')">
+        <div class="modal">
+            <div class="modal-header">
+                <h3>Convidar membro</h3>
+                <button class="modal-close" onclick="closeModal('modal-invite')">✕</button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label for="invite-email">E-mail *</label>
+                    <input type="email" id="invite-email" placeholder="email@exemplo.com" />
+                </div>
+                <p class="invite-note">Um link de convite será enviado por e-mail. Válido por 7 dias.</p>
+                <div class="error-msg" id="error-invite">Insira um e-mail válido.</div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn-cancel" onclick="closeModal('modal-invite')">Cancelar</button>
+                <button class="btn-save" id="btn-send-invite" onclick="sendInvite()">
+                    <span id="invite-label">Enviar convite</span>
+                    <span class="spinner hidden" id="invite-spinner"></span>
+                </button>
+            </div>
         </div>
     </div>
-</div>
 
-<!-- MODAL CONVIDAR -->
-<div class="modal-overlay hidden" id="modal-invite" onclick="handleOverlayClick(event,'modal-invite')">
-    <div class="modal">
-        <div class="modal-header"><h3>Convidar membro</h3><button class="modal-close" onclick="closeModal('modal-invite')">✕</button></div>
-        <div class="modal-body">
-            <div class="form-group"><label for="invite-email">E-mail *</label><input type="email" id="invite-email" placeholder="email@exemplo.com" /></div>
-            <p class="invite-note">Um link de convite será enviado por e-mail. Válido por 7 dias.</p>
-            <div class="error-msg" id="error-invite">⚠ Insira um e-mail válido.</div>
-        </div>
-        <div class="modal-footer">
-            <button class="btn-cancel" onclick="closeModal('modal-invite')">Cancelar</button>
-            <button class="btn-save" id="btn-send-invite" onclick="sendInvite()"><span id="invite-label">Enviar convite</span><span class="spinner hidden" id="invite-spinner"></span></button>
-        </div>
-    </div>
-</div>
-
-<!-- MODAL MEMBROS -->
-<div class="modal-overlay hidden" id="modal-members" onclick="handleOverlayClick(event,'modal-members')">
-    <div class="modal modal-wide">
-        <div class="modal-header"><h3 id="modal-members-title">Membros</h3><button class="modal-close" onclick="closeModal('modal-members')">✕</button></div>
-        <div class="modal-body"><div id="members-list" class="members-list"></div></div>
-        <div class="modal-footer">
-            <button class="btn-cancel" onclick="closeModal('modal-members')">Fechar</button>
-            <button class="btn-save" onclick="openInviteModal()">+ Convidar</button>
+    <!-- MODAL MEMBROS -->
+    <div class="modal-overlay hidden" id="modal-members" onclick="handleOverlayClick(event,'modal-members')">
+        <div class="modal modal-wide">
+            <div class="modal-header">
+                <h3 id="modal-members-title">Membros</h3>
+                <button class="modal-close" onclick="closeModal('modal-members')">✕</button>
+            </div>
+            <div class="modal-body">
+                <div id="members-list" class="members-list"></div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn-cancel" onclick="closeModal('modal-members')">Fechar</button>
+                <button class="btn-save" onclick="openInviteModal()">Convidar membro</button>
+            </div>
         </div>
     </div>
-</div>
 
-<!-- MODAL DELETE -->
-<div class="modal-overlay hidden" id="modal-delete" onclick="handleOverlayClick(event,'modal-delete')">
-    <div class="modal logout-modal">
-        <div class="logout-icon-wrap"><div class="logout-icon" style="background:#FFEBE6;color:#BF2600;">🗑</div></div>
-        <div class="logout-body"><h3 class="logout-title">Deletar workspace?</h3><p class="logout-desc">Esta ação é irreversível. Todas as tarefas e membros serão removidos.</p></div>
-        <div class="logout-footer">
-            <button class="btn-cancel" onclick="closeModal('modal-delete')">Cancelar</button>
-            <button class="btn-logout-confirm" id="btn-confirm-delete" onclick="confirmDelete()"><span id="delete-label">Deletar</span><span class="spinner hidden" id="delete-spinner"></span></button>
+    <!-- MODAL DELETE -->
+    <div class="modal-overlay hidden" id="modal-delete" onclick="handleOverlayClick(event,'modal-delete')">
+        <div class="modal logout-modal">
+            <div class="logout-icon-wrap">
+                <div class="logout-icon" style="background:#FFEBE6;color:#BF2600;">✕</div>
+            </div>
+            <div class="logout-body">
+                <h3 class="logout-title">Remover workspace?</h3>
+                <p class="logout-desc">Esta ação é irreversível. Todas as tarefas e membros serão removidos
+                    permanentemente.</p>
+            </div>
+            <div class="logout-footer">
+                <button class="btn-cancel" onclick="closeModal('modal-delete')">Cancelar</button>
+                <button class="btn-logout-confirm" id="btn-confirm-delete" onclick="confirmDelete()">
+                    <span id="delete-label">Remover</span>
+                    <span class="spinner hidden" id="delete-spinner"></span>
+                </button>
+            </div>
         </div>
     </div>
-</div>
 
-<!-- LOGOUT MODAL -->
-<div class="modal-overlay hidden" id="logout-overlay">
-    <div class="modal logout-modal">
-        <div class="logout-icon-wrap"><div class="logout-icon">⇥</div></div>
-        <div class="logout-body"><h3 class="logout-title">Sair da conta?</h3><p class="logout-desc">Você será redirecionado para a página de login.</p></div>
-        <div class="logout-footer">
-            <button class="btn-cancel" onclick="closeLogout()">Cancelar</button>
-            <button class="btn-logout-confirm" onclick="confirmLogout()"><span id="logout-label">Sair</span><span class="spinner hidden" id="logout-spinner"></span></button>
+    <!-- LOGOUT MODAL -->
+    <div class="modal-overlay hidden" id="logout-overlay">
+        <div class="modal logout-modal">
+            <div class="logout-icon-wrap">
+                <div class="logout-icon">⇥</div>
+            </div>
+            <div class="logout-body">
+                <h3 class="logout-title">Sair da conta?</h3>
+                <p class="logout-desc">Você será redirecionado para a página de login.</p>
+            </div>
+            <div class="logout-footer">
+                <button class="btn-cancel" onclick="closeLogout()">Cancelar</button>
+                <button class="btn-logout-confirm" onclick="confirmLogout()">
+                    <span id="logout-label">Sair</span>
+                    <span class="spinner hidden" id="logout-spinner"></span>
+                </button>
+            </div>
         </div>
     </div>
-</div>
+    <!-- MODAL CONFIRMAÇÃO TROCA DE MODO -->
+    <div class="modal-overlay hidden" id="modal-mode-confirm" onclick="handleOverlayClick(event,'modal-mode-confirm')">
+        <div class="modal logout-modal">
+            <div class="logout-icon-wrap">
+                <div class="logout-icon" style="background:#FFF7D6;color:#974F0C;">⚠</div>
+            </div>
+            <div class="logout-body">
+                <h3 class="logout-title">Alterar modo de conclusão?</h3>
+                <p class="logout-desc">Este workspace já possui tarefas criadas. Mudar o modo pode alterar o
+                    comportamento de conclusão das tarefas existentes.</p>
+            </div>
+            <div class="logout-footer">
+                <button class="btn-cancel" onclick="cancelModeChange()">Cancelar</button>
+                <button class="btn-save" onclick="confirmModeChange()">Confirmar</button>
+            </div>
+        </div>
+    </div>
 
-<script src="assets/js/theme.js"></script>
-<script src="assets/js/workspace.js"></script>
-<script>
-function toggleAppearance() {
-    const trigger = document.getElementById('appearance-trigger');
-    const panel   = document.getElementById('appearance-panel');
-    const isOpen  = panel.classList.contains('open');
-    panel.classList.toggle('open', !isOpen);
-    trigger.setAttribute('aria-expanded', String(!isOpen));
-}
-</script>
+    <script src="assets/js/theme.js"></script>
+    <script src="assets/js/workspace.js"></script>
+    <script>
+        function toggleAppearance() {
+            const trigger = document.getElementById('appearance-trigger');
+            const panel = document.getElementById('appearance-panel');
+            const isOpen = panel.classList.contains('open');
+            panel.classList.toggle('open', !isOpen);
+            trigger.setAttribute('aria-expanded', String(!isOpen));
+        }
+    </script>
 </body>
+
 </html>

@@ -4,7 +4,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>TaskFlow – Notificações</title>
+  <title>Notificações</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap"
@@ -30,11 +30,15 @@
 
       <nav class="sidebar-nav">
         <div class="nav-item" onclick="location.href='dashboard.html'"><span class="nav-icon">⊞</span> Meu board</div>
-        <div class="nav-item" onclick="location.href='dashboard.html'"><span class="nav-icon">☑</span> Tarefas</div>
+        <div class="nav-item" onclick="location.href='tasks.html'">☑ Tarefas
+          <span class="nav-badge hidden" id="nav-tasks-badge">0</span>
+        </div>
         <div class="nav-item" onclick="location.href='workspace.html'"><span class="nav-icon">🏢</span> Workspaces</div>
         <div class="nav-item active"><span class="nav-icon">🔔</span> Notificações<span class="nav-badge hidden"
             id="nav-badge">0</span></div>
-        <div class="nav-item"><span class="nav-icon">⚙</span> Configurações</div>
+        <div class="nav-item" onclick="location.href='settings.html'">
+          <span class="nav-icon">⚙</span> Configurações
+        </div>
       </nav>
 
       <button class="appearance-trigger" id="appearance-trigger" aria-expanded="false" aria-controls="appearance-panel"
@@ -79,8 +83,11 @@
       <div class="sidebar-user">
         <div class="user-avatar" id="user-avatar">LH</div>
         <div class="user-info">
-          <div class="user-name" id="user-name">Carregando...</div>
-          <div class="user-role">Developer</div>
+          <div class="user-name" id="user-name">Luiz</div>
+          <div class="user-meta">
+            <div class="user-role" id="user-role">Developer</div>
+            <span class="plan-badge free" id="plan-badge">Free</span>
+          </div>
         </div>
         <button class="btn-logout" title="Sair" onclick="handleLogout()">⇥</button>
       </div>

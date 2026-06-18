@@ -8,6 +8,7 @@ public class Workspace
     public int OwnerId { get; set; }
     public User Owner { get; set; } = null!;
     public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
+    public string CompletionMode { get; set; } = "column";
 
     public ICollection<WorkspaceMember> Members { get; set; } = new List<WorkspaceMember>();
     public ICollection<TaskItem> Tasks { get; set; } = new List<TaskItem>();

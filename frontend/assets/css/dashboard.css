@@ -337,6 +337,7 @@ body { font-family: var(--font); }
   flex-shrink: 0;
 }
 
+
 .user-avatar {
   width: 32px; height: 32px;
   background: rgba(255,255,255,.25);
@@ -348,7 +349,14 @@ body { font-family: var(--font); }
 
 .user-info { flex: 1; min-width: 0; }
 .user-name  { font-size: 12px; font-weight: 700; color: var(--text-primary); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.user-meta {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: 2px;
+}
 .user-role  { font-size: 11px; color: var(--text-secondary); }
+
 
 .btn-logout {
   background: none; border: none;
@@ -684,3 +692,101 @@ body { font-family: var(--font); }
   overflow: hidden;
 }
 
+/* ── DEADLINE BADGE ── */
+.deadline-badge {
+  font-size: 10px; font-weight: 700;
+  padding: 2px 7px; border-radius: 100px;
+  margin-left: 6px;
+  white-space: nowrap;
+}
+.deadline-badge.overdue { background: #FFEBE6; color: #BF2600; }
+.deadline-badge.today   { background: #FFF7D6; color: #974F0C; }
+.deadline-badge.soon    { background: #FFF0E0; color: #B65C02; }
+.deadline-badge.ok      { background: #E3FCEF; color: #006644; }
+
+/* ── TEMPLATES ── */
+.template-row {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-wrap: wrap;
+  margin-bottom: 16px;
+  padding-bottom: 16px;
+  border-bottom: 1px solid #DFE1E6;
+}
+
+.template-label {
+  font-size: 11px;
+  font-weight: 700;
+  color: #6B778C;
+  white-space: nowrap;
+}
+
+.tpl-btn {
+  font-family: var(--font);
+  font-size: 11px; font-weight: 600;
+  padding: 4px 10px; border-radius: 100px;
+  border: 1.5px solid #DFE1E6;
+  background: white; color: #42526E;
+  cursor: pointer;
+  transition: all .15s;
+}
+.tpl-btn:hover  { border-color: #0065FF; color: #0052CC; background: #E6F0FF; }
+.tpl-btn.active { border-color: #0065FF; color: #0052CC; background: #E6F0FF; }
+
+/* ── PLAN BADGE ── */
+.plan-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 10px;
+  font-weight: 700;
+  padding: 2px 8px;
+  border-radius: 100px;
+  text-transform: uppercase;
+  letter-spacing: .04em;
+}
+
+.plan-badge.free     { background: rgba(255,255,255,.15); color: var(--text-secondary); }
+.plan-badge.standard { background: #E6F0FF; color: #0052CC; }
+.plan-badge.premium  { background: #FFF0B3; color: #974F0C; }
+.plan-badge.enterprise { background: #EAE6FF; color: #403294; }
+
+body[data-theme="light"] .plan-badge.free { background: #F4F5F7; color: #6B778C; }
+
+/* ── MOVE DROPDOWN ── */
+.card-move-wrap {
+    position: relative;
+}
+
+.btn-move {
+    background: var(--theme-accent-light, #E6F0FF);
+    color: var(--theme-accent, #0052CC);
+}
+.btn-move:hover {
+    background: var(--theme-accent, #0052CC);
+    color: white;
+}
+
+.move-menu {
+    position: absolute;
+    bottom: calc(100% + 4px);
+    left: 0;
+    background: white;
+    border: 1px solid #DFE1E6;
+    border-radius: 8px;
+    box-shadow: 0 8px 24px rgba(0,0,0,.15);
+    min-width: 140px;
+    z-index: 50;
+    overflow: hidden;
+}
+
+.move-menu-item {
+    padding: 8px 12px;
+    font-size: 12px;
+    font-weight: 600;
+    color: #172B4D;
+    cursor: pointer;
+    transition: background .1s;
+}
+.move-menu-item:hover { background: #F4F5F7; }

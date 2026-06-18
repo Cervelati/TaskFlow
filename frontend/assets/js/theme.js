@@ -2,7 +2,7 @@
 
 /* ══════════════════════════════════════════════════
    TaskFlow – theme.js  (compartilhado entre páginas)
-   ══════════════════════════════════════════════════ */
+══════════════════════════════════════════════════ */
 
 const THEME_CONFIG = {
     blue:     { bg: '#0052CC', accent: '#0052CC', accentLight: '#E6F0FF', accentHover: '#003D99' },
@@ -29,7 +29,6 @@ function applyTheme(token, mode, transition = true) {
         if (db) db.style.background = config.bg;
     }
 
-    // Injeta variáveis CSS dinâmicas para botões dos cards
     document.documentElement.style.setProperty('--theme-accent',       config.accent);
     document.documentElement.style.setProperty('--theme-accent-light', config.accentLight);
     document.documentElement.style.setProperty('--theme-accent-hover', config.accentHover);
@@ -72,11 +71,9 @@ function updateModeBtns(mode) {
 }
 
 function updateThemeBtns(token) {
-    // Suporte ao accordion do dashboard (color-row)
     document.querySelectorAll('.color-row').forEach(row => {
         row.classList.toggle('active', row.dataset.theme === token);
     });
-    // Suporte aos botões circulares das outras páginas (theme-btn)
     document.querySelectorAll('.theme-btn').forEach(btn => {
         btn.classList.toggle('active', btn.dataset.theme === token);
     });
@@ -89,5 +86,96 @@ function initTheme() {
     updateThemeBtns(theme);
 }
 
-// Aplica imediatamente ao carregar
 initTheme();
+
+/* ══════════════════════════════════════════════════
+   USER INFO GLOBAL
+══════════════════════════════════════════════════ */
+function loadUserInfo() {
+    try {
+        const u = JSON.parse(localStorage.getItem('user'));
+        if (!u) return;
+
+        const nameEl   = document.getElementById('user-name');
+        const avatarEl = document.getElementById('user-avatar');
+        if (nameEl && u.name)   nameEl.textContent   = u.name;
+        if (avatarEl && u.name) avatarEl.textContent = u.name.split(' ').slice(0,2).map(w => w[0].toUpperCase()).join('');
+
+        const roleEl = document.getElementById('user-role');
+        if (roleEl) roleEl.textContent = getUserRole();
+
+        const planBadge = document.getElementById('plan-badge');
+        if (planBadge && u.plan) {
+            const labels = { free:'Free', standard:'Standard', premium:'Premium', enterprise:'Enterprise' };
+            planBadge.textContent = labels[u.plan] || 'Free';
+            planBadge.className   = `plan-badge ${u.plan}`;
+        }
+    } catch(_) {}
+}
+
+function getUserRole() {
+    try {
+        const prefs = JSON.parse(localStorage.getItem('taskflow_prefs')) || {};
+        return prefs.role || 'Developer';
+    } catch(_) { return 'Developer'; }
+}
+
+function setUserRole(role) {
+    try {
+        const prefs = JSON.parse(localStorage.getItem('taskflow_prefs')) || {};
+        prefs.role = role;
+        localStorage.setItem('taskflow_prefs', JSON.stringify(prefs));
+        const roleEl = document.getElementById('user-role');
+        if (roleEl) roleEl.textContent = role;
+    } catch(_) {}
+}
+
+/* ══════════════════════════════════════════════════
+   BADGES DE URGÊNCIA
+══════════════════════════════════════════════════ */
+async function refreshUrgentBadges() {
+    try {
+        const token = localStorage.getItem('token');
+        if (!token) return;
+
+        const res = await fetch('http://localhost:5000/api/tasks', {
+            headers: { 'Authorization': `Bearer ${token}` }
+        });
+        if (!res.ok) return;
+        const tasks = await res.json();
+
+        const today = new Date(); today.setHours(0,0,0,0);
+        const count = tasks.filter(t => {
+            if (!t.dueDate || t.isCompleted) return false;
+            const diff = Math.floor((new Date(t.dueDate) - today) / 86400000);
+            return diff >= 0 && diff <= 2;
+        }).length;
+
+        const badge = document.getElementById('nav-tasks-badge');
+        if (badge) {
+            badge.textContent = count;
+            badge.classList.toggle('hidden', count === 0);
+        }
+    } catch(_) {}
+}
+
+/* ══════════════════════════════════════════════════
+   BADGE CSS
+══════════════════════════════════════════════════ */
+(function injectBadgeStyle() {
+    if (document.getElementById('tf-badge-style')) return;
+    const s = document.createElement('style');
+    s.id = 'tf-badge-style';
+    s.textContent = `
+        .nav-badge {
+            display: inline-flex; align-items: center; justify-content: center;
+            min-width: 16px; height: 16px;
+            background: #FF5630; color: white;
+            font-size: 9px; font-weight: 700;
+            border-radius: 100px; padding: 0 4px;
+            margin-left: auto;
+        }
+        .nav-badge.hidden { display: none !important; }
+    `;
+    document.head.appendChild(s);
+})();

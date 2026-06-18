@@ -35,7 +35,8 @@ public class AuthService
         _db.Users.Add(user);
         await _db.SaveChangesAsync();
 
-        return new AuthResponse(user.Id, user.Name, user.Email, GenerateToken(user));
+        return new AuthResponse(user.Id, user.Name, user.Email, GenerateToken(user), user.Plan);
+        
     }
 
     public async Task<AuthResponse?> LoginAsync(LoginRequest request)
@@ -45,12 +46,56 @@ public class AuthService
         if (user is null || !BCrypt.Net.BCrypt.Verify(request.Password, user.PasswordHash))
             return null;
 
-        return new AuthResponse(user.Id, user.Name, user.Email, GenerateToken(user));
+        return new AuthResponse(user.Id, user.Name, user.Email, GenerateToken(user), user.Plan);
+
+    }
+
+    public async Task<AuthResponse?> UpdateProfileAsync(int userId, UpdateProfileRequest request)
+    {
+        var user = await _db.Users.FindAsync(userId);
+        if (user is null) return null;
+
+        // Verifica se o novo email já está em uso por outro usuário
+        if (user.Email != request.Email &&
+            await _db.Users.AnyAsync(u => u.Email == request.Email && u.Id != userId))
+            return null;
+
+        user.Name  = request.Name.Trim();
+        user.Email = request.Email.Trim().ToLower();
+        await _db.SaveChangesAsync();
+
+        return new AuthResponse(user.Id, user.Name, user.Email, GenerateToken(user), user.Plan);
+    }
+
+    public async Task<bool> ChangePasswordAsync(int userId, ChangePasswordRequest request)
+    {
+        var user = await _db.Users.FindAsync(userId);
+        if (user is null) return false;
+
+        if (!BCrypt.Net.BCrypt.Verify(request.CurrentPassword, user.PasswordHash))
+            return false;
+
+        user.PasswordHash = BCrypt.Net.BCrypt.HashPassword(request.NewPassword);
+        await _db.SaveChangesAsync();
+        return true;
+    }
+
+    public async Task<bool> DeleteAccountAsync(int userId, string password)
+    {
+        var user = await _db.Users.FindAsync(userId);
+        if (user is null) return false;
+
+        if (!BCrypt.Net.BCrypt.Verify(password, user.PasswordHash))
+            return false;
+
+        _db.Users.Remove(user);
+        await _db.SaveChangesAsync();
+        return true;
     }
 
     private string GenerateToken(User user)
     {
-        var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_config["Jwt:Key"]!));
+        var key   = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_config["Jwt:Key"]!));
         var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
 
         var claims = new[]

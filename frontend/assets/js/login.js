@@ -75,7 +75,7 @@ async function handleLogin() {
     }
 
     localStorage.setItem('token', data.token);
-    localStorage.setItem('user', JSON.stringify({ id: data.id, name: data.name, email: data.email }));
+    localStorage.setItem('user', JSON.stringify({ id: data.id, name: data.name, email: data.email, plan: data.plan }));
 
     window.location.href = 'dashboard.html';
 
@@ -119,7 +119,7 @@ async function handleRegister() {
     }
 
     localStorage.setItem('token', data.token);
-    localStorage.setItem('user', JSON.stringify({ id: data.id, name: data.name, email: data.email }));
+    localStorage.setItem('user', JSON.stringify({ id: data.id, name: data.name, email: data.email, plan: data.plan }));
 
     window.location.href = 'dashboard.html';
 

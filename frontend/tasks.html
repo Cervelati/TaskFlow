@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="pt-BR" data-theme="blue">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>TaskFlow – Tarefas</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="assets/css/dashboard.css" />
+    <link rel="stylesheet" href="assets/css/tasks.css" />
+    <link rel="stylesheet" href="assets/css/theme-vars.css" />
+</head>
+<body data-theme="blue">
+<div class="db">
+
+    <!-- SIDEBAR -->
+    <aside class="sidebar">
+        <div class="sidebar-logo">
+            <div class="logo-icon">
+                <div class="logo-col"></div><div class="logo-col"></div><div class="logo-col"></div>
+            </div>
+            <span class="logo-text">TaskFlow</span>
+        </div>
+        <nav class="sidebar-nav">
+            <div class="nav-item" onclick="location.href='dashboard.html'"><span class="nav-icon">⊞</span> Meu board</div>
+            <div class="nav-item active"><span class="nav-icon">☑</span> Tarefas
+                <span class="nav-badge hidden" id="nav-tasks-badge">0</span>
+            </div>
+            <div class="nav-item" onclick="location.href='workspace.html'"><span class="nav-icon">🏢</span> Workspaces</div>
+            <div class="nav-item" onclick="location.href='notification.html'"><span class="nav-icon">🔔</span> Notificações</div>
+            <div class="nav-item" onclick="location.href='settings.html'"><span class="nav-icon">⚙</span> Configurações</div>
+        </nav>
+        <button class="appearance-trigger" id="appearance-trigger" aria-expanded="false" aria-controls="appearance-panel" onclick="toggleAppearance()">
+            <span class="ap-trigger-icon">✦</span>
+            <span class="ap-trigger-label">Aparência</span>
+            <span class="ap-chevron">▾</span>
+        </button>
+        <div class="appearance-panel" id="appearance-panel" role="region" aria-labelledby="appearance-trigger">
+            <div class="ap-section-label">Modo</div>
+            <div class="mode-row">
+                <button class="mode-btn active" id="btn-dark-mode" onclick="setMode('dark-mode')">🌙 Escuro</button>
+                <button class="mode-btn" id="btn-light-mode" onclick="setMode('light-mode')">☀️ Claro</button>
+            </div>
+            <div class="ap-section-label" style="margin-top:6px;">Cor do board</div>
+            <div class="color-list" id="color-list">
+                <div class="color-row active" data-theme="blue" onclick="setTheme('blue', this)"><span class="color-swatch" style="background:#0052CC;"></span><span class="color-row-name">Azul</span><span class="color-row-check">✓</span></div>
+                <div class="color-row" data-theme="teal" onclick="setTheme('teal', this)"><span class="color-swatch" style="background:#007A94;"></span><span class="color-row-name">Verde-azulado</span><span class="color-row-check">✓</span></div>
+                <div class="color-row" data-theme="green" onclick="setTheme('green', this)"><span class="color-swatch" style="background:#0B6E4F;"></span><span class="color-row-name">Verde</span><span class="color-row-check">✓</span></div>
+                <div class="color-row" data-theme="purple" onclick="setTheme('purple', this)"><span class="color-swatch" style="background:#403294;"></span><span class="color-row-name">Roxo</span><span class="color-row-check">✓</span></div>
+                <div class="color-row" data-theme="slate" onclick="setTheme('slate', this)"><span class="color-swatch" style="background:#2C3E50;"></span><span class="color-row-name">Slate</span><span class="color-row-check">✓</span></div>
+                <div class="color-row" data-theme="crimson" onclick="setTheme('crimson', this)"><span class="color-swatch" style="background:#8B1A2B;"></span><span class="color-row-name">Vinho</span><span class="color-row-check">✓</span></div>
+                <div class="color-row" data-theme="midnight" onclick="setTheme('midnight', this)"><span class="color-swatch" style="background:#1A1A2E;"></span><span class="color-row-name">Midnight</span><span class="color-row-check">✓</span></div>
+            </div>
+        </div>
+        <div class="sidebar-user">
+            <div class="user-avatar" id="user-avatar">LH</div>
+            <div class="user-info">
+                <div class="user-name" id="user-name">Luiz</div>
+                <div class="user-meta">
+                    <div class="user-role" id="user-role">Developer</div>
+                    <span class="plan-badge free" id="plan-badge">Free</span>
+                </div>
+            </div>
+            <button class="btn-logout" title="Sair" onclick="handleLogout()">⇥</button>
+        </div>
+    </aside>
+
+    <!-- MAIN -->
+    <div class="main">
+        <div class="topbar">
+            <span class="topbar-title">Tarefas</span>
+        </div>
+
+        <!-- FILTROS -->
+        <div class="tasks-filters-bar">
+            <div class="tasks-filter-group">
+                <button class="tasks-filter-btn active" data-filter="all" onclick="setFilter('all',this)">Todas</button>
+                <button class="tasks-filter-btn" data-filter="urgent" onclick="setFilter('urgent',this)">
+                    Urgentes
+                    <span class="tasks-urgent-badge hidden" id="urgent-badge">0</span>
+                </button>
+                <button class="tasks-filter-btn" data-filter="today" onclick="setFilter('today',this)">Vencem hoje</button>
+                <button class="tasks-filter-btn" data-filter="pending" onclick="setFilter('pending',this)">Pendentes</button>
+                <button class="tasks-filter-btn" data-filter="done" onclick="setFilter('done',this)">Concluídas</button>
+            </div>
+            <div class="tasks-filter-group">
+                <select class="tasks-filter-select" id="filter-workspace" onchange="applyFilters()">
+                    <option value="all">Todos os workspaces</option>
+                    <option value="personal">Pessoal</option>
+                </select>
+                <select class="tasks-filter-select" id="filter-sort" onchange="applyFilters()">
+                    <option value="date-asc">Prazo: mais próximo</option>
+                    <option value="date-desc">Prazo: mais distante</option>
+                    <option value="created">Mais recente</option>
+                </select>
+            </div>
+        </div>
+
+        <!-- SUMÁRIO -->
+        <div class="tasks-summary" id="tasks-summary">
+            <div class="tasks-summary-item">
+                <div class="tasks-summary-num" id="sum-total">—</div>
+                <div class="tasks-summary-label">Total</div>
+            </div>
+            <div class="tasks-summary-item urgent">
+                <div class="tasks-summary-num" id="sum-urgent">—</div>
+                <div class="tasks-summary-label">Urgentes</div>
+            </div>
+            <div class="tasks-summary-item">
+                <div class="tasks-summary-num" id="sum-pending">—</div>
+                <div class="tasks-summary-label">Pendentes</div>
+            </div>
+            <div class="tasks-summary-item done">
+                <div class="tasks-summary-num" id="sum-done">—</div>
+                <div class="tasks-summary-label">Concluídas</div>
+            </div>
+        </div>
+
+        <!-- LISTA -->
+        <div class="tasks-content">
+            <div class="tasks-loading" id="tasks-loading">
+                <div class="ws-spinner"></div>
+                <span>Carregando tarefas...</span>
+            </div>
+            <div class="tasks-empty hidden" id="tasks-empty">
+                <div class="tasks-empty-icon">☑</div>
+                <h3>Nenhuma tarefa encontrada</h3>
+                <p>Tente ajustar os filtros ou crie uma nova tarefa.</p>
+            </div>
+            <div class="tasks-list hidden" id="tasks-list"></div>
+        </div>
+    </div>
+</div>
+
+<!-- LOGOUT MODAL -->
+<div class="modal-overlay hidden" id="logout-overlay">
+    <div class="modal logout-modal">
+        <div class="logout-icon-wrap"><div class="logout-icon">⇥</div></div>
+        <div class="logout-body">
+            <h3 class="logout-title">Sair da conta?</h3>
+            <p class="logout-desc">Você será redirecionado para a página de login.</p>
+        </div>
+        <div class="logout-footer">
+            <button class="btn-cancel" onclick="closeLogout()">Cancelar</button>
+            <button class="btn-logout-confirm" onclick="confirmLogout()">
+                <span id="logout-label">Sair</span>
+                <span class="spinner hidden" id="logout-spinner"></span>
+            </button>
+        </div>
+    </div>
+</div>
+
+<script src="assets/js/theme.js"></script>
+<script src="assets/js/tasks.js"></script>
+<script>
+    function toggleAppearance() {
+        const trigger = document.getElementById('appearance-trigger');
+        const panel   = document.getElementById('appearance-panel');
+        const isOpen  = panel.classList.contains('open');
+        panel.classList.toggle('open', !isOpen);
+        trigger.setAttribute('aria-expanded', String(!isOpen));
+    }
+</script>
+</body>
+</html>

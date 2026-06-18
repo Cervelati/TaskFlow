@@ -15,5 +15,10 @@ public record AuthResponse(
     int Id,
     string Name,
     string Email,
-    string Token
+    string Token,
+    string Plan
 );
+
+public record UpdateProfileRequest(string Name, string Email);
+public record ChangePasswordRequest(string CurrentPassword, string NewPassword);
+public record DeleteAccountRequest(string Password);

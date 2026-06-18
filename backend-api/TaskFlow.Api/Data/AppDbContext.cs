@@ -12,6 +12,7 @@ public class AppDbContext : DbContext
     public DbSet<Workspace> Workspaces { get; set; } = null!;
     public DbSet<WorkspaceMember> WorkspaceMembers { get; set; } = null!;
     public DbSet<Invite> Invites { get; set; } = null!;
+    public DbSet<BoardColumn> Columns { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -34,4 +35,5 @@ public class AppDbContext : DbContext
             .HasForeignKey(t => t.WorkspaceId)
             .OnDelete(DeleteBehavior.SetNull);
     }
+    
 }

@@ -1,11 +1,12 @@
-namespace TaskFlow.Api.DTOs;
+﻿namespace TaskFlow.Api.DTOs;
 
 public record CreateTaskRequest(
     string Title,
     string Description,
     DateTime? DueDate,
     string? Status,
-    int? WorkspaceId
+    int? WorkspaceId,
+    int? ColumnId
 );
 
 public record UpdateTaskRequest(
@@ -13,7 +14,8 @@ public record UpdateTaskRequest(
     string Description,
     bool IsCompleted,
     DateTime? DueDate,
-    string? Status
+    string? Status,
+    int? ColumnId
 );
 
 public record TaskResponse(
@@ -25,5 +27,6 @@ public record TaskResponse(
     DateTime? DueDate,
     int UserId,
     string Status,
-    int? WorkspaceId
+    int? WorkspaceId,
+    int? ColumnId
 );

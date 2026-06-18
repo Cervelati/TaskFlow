@@ -4,31 +4,27 @@ const API_URL = 'http://localhost:8080';
 const POLL_INTERVAL = 30000;
 
 let allNotifications = [];
-let currentFilter    = 'all';
-let currentUser      = null;
-let pollTimer        = null;
+let currentFilter = 'all';
+let currentUser = null;
+let pollTimer = null;
 
 (function init() {
-  const token = localStorage.getItem('token');
-  if (!token) { window.location.href = 'login.html'; return; }
+    const token = localStorage.getItem('token');
+    if (!token) { window.location.href = 'login.html'; return; }
 
-  try {
-    currentUser = JSON.parse(localStorage.getItem('user'));
-    if (currentUser?.name) {
-      const nameEl   = document.getElementById('user-name');
-      const avatarEl = document.getElementById('user-avatar');
-      if (nameEl)   nameEl.textContent   = currentUser.name;
-      if (avatarEl) avatarEl.textContent = currentUser.name
-        .split(' ').slice(0, 2).map(w => w[0].toUpperCase()).join('');
-    }
-  } catch (_) {}
+    try {
+        currentUser = JSON.parse(localStorage.getItem('user'));
+    } catch (_) {}
 
-  const { theme, mode } = loadTheme();
-  updateModeBtns(mode);
-  updateThemeBtns(theme);
+    const { theme, mode } = loadTheme();
+    updateModeBtns(mode);
+    updateThemeBtns(theme);
 
-  loadNotifications();
-  pollTimer = setInterval(() => loadNotifications(true), POLL_INTERVAL);
+    loadUserInfo();
+    refreshUrgentBadges();
+
+    loadNotifications();
+    pollTimer = setInterval(() => loadNotifications(true), POLL_INTERVAL);
 })();
 
 async function loadNotifications(isPolling = false) {
@@ -38,7 +34,7 @@ async function loadNotifications(isPolling = false) {
 
   try {
     const token = localStorage.getItem('token');
-    const res   = await fetch(`${API_URL}/api/notifications/${currentUser.id}`, {
+    const res = await fetch(`${API_URL}/api/notifications/${currentUser.id}`, {
       headers: { 'Authorization': `Bearer ${token}` }
     });
     if (!res.ok) throw new Error(`HTTP ${res.status}`);
@@ -103,11 +99,11 @@ async function deleteNotif(id) {
 }
 
 function renderNotifications() {
-  const list    = document.getElementById('notif-list');
+  const list = document.getElementById('notif-list');
   const emptyEl = document.getElementById('notif-empty');
   const filtered = allNotifications.filter(n => {
     if (currentFilter === 'unread') return !n.read;
-    if (currentFilter === 'read')   return  n.read;
+    if (currentFilter === 'read') return n.read;
     return true;
   });
   if (filtered.length === 0) { list.innerHTML = ''; emptyEl.classList.remove('hidden'); return; }
@@ -176,7 +172,7 @@ function showErrorState(msg) {
 }
 
 function handleLogout() { document.getElementById('logout-overlay').classList.remove('hidden'); }
-function closeLogout()   { document.getElementById('logout-overlay').classList.add('hidden'); }
+function closeLogout() { document.getElementById('logout-overlay').classList.add('hidden'); }
 function confirmLogout() {
   const btn = document.querySelector('.btn-logout-confirm');
   const label = document.getElementById('logout-label');
@@ -188,28 +184,28 @@ function confirmLogout() {
 
 function typeConfig(type) {
   const map = {
-    TASK_CREATED:  { icon: '✨', iconClass: 'icon-created',  badgeClass: 'badge-created',  badgeLabel: 'Nova tarefa' },
-    TASK_UPDATED:  { icon: '✏️', iconClass: 'icon-updated',  badgeClass: 'badge-updated',  badgeLabel: 'Atualizada' },
-    TASK_DONE:     { icon: '✅', iconClass: 'icon-done',     badgeClass: 'badge-done',     badgeLabel: 'Concluída'  },
-    TASK_DEADLINE: { icon: '⏰', iconClass: 'icon-deadline', badgeClass: 'badge-deadline', badgeLabel: 'Prazo!'     },
+    TASK_CREATED: { icon: '✨', iconClass: 'icon-created', badgeClass: 'badge-created', badgeLabel: 'Nova tarefa' },
+    TASK_UPDATED: { icon: '✏️', iconClass: 'icon-updated', badgeClass: 'badge-updated', badgeLabel: 'Atualizada' },
+    TASK_DONE: { icon: '✅', iconClass: 'icon-done', badgeClass: 'badge-done', badgeLabel: 'Concluída' },
+    TASK_DEADLINE: { icon: '⏰', iconClass: 'icon-deadline', badgeClass: 'badge-deadline', badgeLabel: 'Prazo!' },
   };
   return map[type] || { icon: '🔔', iconClass: 'icon-default', badgeClass: 'badge-default', badgeLabel: type };
 }
 
 function formatDate(iso) {
   if (!iso) return '';
-  const d    = new Date(iso);
-  const now  = new Date();
+  const d = new Date(iso);
+  const now = new Date();
   const diff = Math.floor((now - d) / 1000);
-  if (diff < 60)    return 'agora mesmo';
-  if (diff < 3600)  return `${Math.floor(diff / 60)} min atrás`;
+  if (diff < 60) return 'agora mesmo';
+  if (diff < 3600) return `${Math.floor(diff / 60)} min atrás`;
   if (diff < 86400) return `${Math.floor(diff / 3600)}h atrás`;
   const days = Math.floor(diff / 86400);
   if (days === 1) return 'ontem';
-  if (days < 7)  return `${days} dias atrás`;
+  if (days < 7) return `${days} dias atrás`;
   return d.toLocaleDateString('pt-BR', { day: '2-digit', month: 'short' });
 }
 
 function escHtml(str) {
-  return String(str).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+  return String(str).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
 }

@@ -1,0 +1,28 @@
+/*
+ * columnExtra.css
+ * Os estilos de colunas, capa, tags e checklist
+ * foram consolidados em workspaceBoard.css.
+ * Este arquivo é mantido para compatibilidade de import.
+ */
+
+/* ── MODO DE CONCLUSÃO no painel de edição ── */
+.col-edit-mode-row {
+    display: flex;
+    gap: 6px;
+    margin-top: 4px;
+}
+
+.col-edit-mode-btn {
+    font-family: var(--font);
+    font-size: 12px; font-weight: 700;
+    flex: 1;
+    padding: 8px 0;
+    border-radius: 6px;
+    border: 2px solid #DFE1E6;
+    background: white;
+    color: #42526E;
+    cursor: pointer;
+    transition: all .15s;
+}
+.col-edit-mode-btn:hover { border-color: #0065FF; color: #0052CC; }
+.col-edit-mode-btn.active { border-color: #0065FF; background: #E6F0FF; color: #0052CC; }

@@ -1,0 +1,408 @@
+<!DOCTYPE html>
+<html lang="pt-BR" data-theme="blue">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>TaskFlow – Configurações</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap"
+        rel="stylesheet" />
+    <link rel="stylesheet" href="assets/css/dashboard.css" />
+    <link rel="stylesheet" href="assets/css/settings.css" />
+    <link rel="stylesheet" href="assets/css/theme-vars.css" />
+</head>
+
+<body data-theme="blue">
+    <div class="db">
+
+        <!-- ══════════════ SIDEBAR ══════════════ -->
+        <aside class="sidebar">
+            <div class="sidebar-logo">
+                <div class="logo-icon">
+                    <div class="logo-col"></div>
+                    <div class="logo-col"></div>
+                    <div class="logo-col"></div>
+                </div>
+                <span class="logo-text">TaskFlow</span>
+            </div>
+
+            <nav class="sidebar-nav">
+                <div class="nav-item" onclick="location.href='dashboard.html'"><span class="nav-icon">⊞</span> Meu board
+                </div>
+                <div class="nav-item" onclick="location.href='tasks.html'">☑ Tarefas
+                    <span class="nav-badge hidden" id="nav-tasks-badge">0</span>
+                </div>
+                <div class="nav-item" onclick="location.href='workspace.html'"><span class="nav-icon">🏢</span>
+                    Workspaces</div>
+                <div class="nav-item" onclick="location.href='notification.html'"><span class="nav-icon">🔔</span>
+                    Notificações</div>
+                <div class="nav-item active"><span class="nav-icon">⚙</span> Configurações</div>
+            </nav>
+
+            <button class="appearance-trigger" id="appearance-trigger" aria-expanded="false"
+                aria-controls="appearance-panel" onclick="toggleAppearance()">
+                <span class="ap-trigger-icon">✦</span>
+                <span class="ap-trigger-label">Aparência</span>
+                <span class="ap-chevron">▾</span>
+            </button>
+
+            <div class="appearance-panel" id="appearance-panel" role="region" aria-labelledby="appearance-trigger">
+                <div class="ap-section-label">Modo</div>
+                <div class="mode-row">
+                    <button class="mode-btn active" id="btn-dark-mode" onclick="setMode('dark-mode')">🌙 Escuro</button>
+                    <button class="mode-btn" id="btn-light-mode" onclick="setMode('light-mode')">☀️ Claro</button>
+                </div>
+                <div class="ap-section-label" style="margin-top:6px;">Cor do board</div>
+                <div class="color-list" id="color-list">
+                    <div class="color-row active" data-theme="blue" onclick="setTheme('blue', this)"><span
+                            class="color-swatch" style="background:#0052CC;"></span><span
+                            class="color-row-name">Azul</span><span class="color-row-check">✓</span></div>
+                    <div class="color-row" data-theme="teal" onclick="setTheme('teal', this)"><span class="color-swatch"
+                            style="background:#007A94;"></span><span class="color-row-name">Verde-azulado</span><span
+                            class="color-row-check">✓</span></div>
+                    <div class="color-row" data-theme="green" onclick="setTheme('green', this)"><span
+                            class="color-swatch" style="background:#0B6E4F;"></span><span
+                            class="color-row-name">Verde</span><span class="color-row-check">✓</span></div>
+                    <div class="color-row" data-theme="purple" onclick="setTheme('purple', this)"><span
+                            class="color-swatch" style="background:#403294;"></span><span
+                            class="color-row-name">Roxo</span><span class="color-row-check">✓</span></div>
+                    <div class="color-row" data-theme="slate" onclick="setTheme('slate', this)"><span
+                            class="color-swatch" style="background:#2C3E50;"></span><span
+                            class="color-row-name">Slate</span><span class="color-row-check">✓</span></div>
+                    <div class="color-row" data-theme="crimson" onclick="setTheme('crimson', this)"><span
+                            class="color-swatch" style="background:#8B1A2B;"></span><span
+                            class="color-row-name">Vinho</span><span class="color-row-check">✓</span></div>
+                    <div class="color-row" data-theme="midnight" onclick="setTheme('midnight', this)"><span
+                            class="color-swatch" style="background:#1A1A2E;"></span><span
+                            class="color-row-name">Midnight</span><span class="color-row-check">✓</span></div>
+                </div>
+            </div>
+
+            <div class="sidebar-user">
+                <div class="user-avatar" id="user-avatar">LH</div>
+                <div class="user-info">
+                    <div class="user-name" id="user-name">Luiz</div>
+                    <div class="user-meta">
+                        <div class="user-role" id="user-role">Developer</div>
+                        <span class="plan-badge free" id="plan-badge">Free</span>
+                    </div>
+                </div>
+                <button class="btn-logout" title="Sair" onclick="handleLogout()">⇥</button>
+            </div>
+        </aside>
+
+        <!-- ══════════════ MAIN ══════════════ -->
+        <div class="main">
+            <div class="topbar">
+                <span class="topbar-title">⚙ Configurações</span>
+            </div>
+
+            <div class="settings-page">
+
+                <!-- NAV LATERAL DE SEÇÕES -->
+                <nav class="settings-nav">
+                    <div class="settings-nav-item active" onclick="showSection('profile', this)">👤 Perfil</div>
+                    <div class="settings-nav-item" onclick="showSection('notifications', this)">🔔 Notificações</div>
+                    <div class="settings-nav-item" onclick="showSection('about', this)">ℹ️ Sobre</div>
+                    <div class="settings-nav-item danger" onclick="showSection('danger', this)">⚠️ Conta</div>
+                </nav>
+
+                <!-- CONTEÚDO DAS SEÇÕES -->
+                <div class="settings-content">
+
+                    <!-- ── PERFIL ── -->
+                    <section class="settings-section active" id="section-profile">
+                        <div class="settings-section-header">
+                            <h2>Perfil</h2>
+                            <p>Atualize suas informações pessoais.</p>
+                        </div>
+
+                        <!-- Avatar -->
+                        <div class="profile-avatar-row">
+                            <div class="profile-avatar" id="profile-avatar">?</div>
+                            <div>
+                                <div class="profile-avatar-name" id="profile-avatar-name">Carregando...</div>
+                                <div class="profile-avatar-email" id="profile-avatar-email"></div>
+                            </div>
+                        </div>
+
+                        <div class="settings-card">
+                            <div class="settings-card-title">Informações pessoais</div>
+                            <div class="form-group">
+                                <label for="profile-name">Nome</label>
+                                <input type="text" id="profile-name" placeholder="Seu nome completo" maxlength="100" />
+                            </div>
+                            <div class="form-group">
+                                <label for="profile-email">E-mail</label>
+                                <input type="email" id="profile-email" placeholder="seu@email.com" />
+                            </div>
+                            <div class="error-msg" id="error-profile">⚠ Erro ao atualizar perfil.</div>
+                            <div class="success-msg" id="success-profile">✓ Perfil atualizado com sucesso!</div>
+                            <div class="settings-card-footer">
+                                <button class="btn-save" id="btn-save-profile" onclick="saveProfile()">
+                                    <span id="label-profile">Salvar alterações</span>
+                                    <span class="spinner hidden" id="spinner-profile"></span>
+                                </button>
+                            </div>
+                        </div>
+
+                        <div class="settings-card">
+                            <div class="settings-card-title">Alterar senha</div>
+                            <div class="form-group">
+                                <label for="current-password">Senha atual</label>
+                                <input type="password" id="current-password" placeholder="••••••••" />
+                            </div>
+                            <div class="form-group">
+                                <label for="new-password">Nova senha</label>
+                                <input type="password" id="new-password" placeholder="Mínimo 6 caracteres" />
+                            </div>
+                            <div class="form-group">
+                                <label for="confirm-password">Confirmar nova senha</label>
+                                <input type="password" id="confirm-password" placeholder="Repita a nova senha" />
+                            </div>
+                            <div class="error-msg" id="error-password">⚠ Erro ao alterar senha.</div>
+                            <div class="success-msg" id="success-password">✓ Senha alterada com sucesso!</div>
+                            <div class="settings-card-footer">
+                                <button class="btn-save" id="btn-save-password" onclick="changePassword()">
+                                    <span id="label-password">Alterar senha</span>
+                                    <span class="spinner hidden" id="spinner-password"></span>
+                                </button>
+                            </div>
+                        </div>
+                    </section>
+
+                    <!-- ── NOTIFICAÇÕES ── -->
+                    <section class="settings-section hidden" id="section-notifications">
+                        <div class="settings-section-header">
+                            <h2>Notificações</h2>
+                            <p>Controle como e quando você recebe notificações.</p>
+                        </div>
+
+                        <div class="settings-card">
+                            <div class="settings-card-title">E-mail</div>
+                            <div class="settings-toggle-row">
+                                <div>
+                                    <div class="settings-toggle-label">Tarefa criada</div>
+                                    <div class="settings-toggle-desc">Receba um e-mail quando criar uma nova tarefa.
+                                    </div>
+                                </div>
+                                <label class="toggle">
+                                    <input type="checkbox" id="notif-task-created" checked />
+                                    <span class="toggle-slider"></span>
+                                </label>
+                            </div>
+                            <div class="settings-toggle-row">
+                                <div>
+                                    <div class="settings-toggle-label">Convite de workspace</div>
+                                    <div class="settings-toggle-desc">Receba um e-mail quando for convidado para um
+                                        workspace.</div>
+                                </div>
+                                <label class="toggle">
+                                    <input type="checkbox" id="notif-invite" checked />
+                                    <span class="toggle-slider"></span>
+                                </label>
+                            </div>
+                            <div class="settings-toggle-row">
+                                <div>
+                                    <div class="settings-toggle-label">Prazo se aproximando</div>
+                                    <div class="settings-toggle-desc">Receba um alerta 24h antes do prazo de uma tarefa.
+                                    </div>
+                                </div>
+                                <label class="toggle">
+                                    <input type="checkbox" id="notif-deadline" />
+                                    <span class="toggle-slider"></span>
+                                </label>
+                            </div>
+                            <div class="settings-card-footer">
+                                <button class="btn-save" onclick="saveNotifPrefs()">Salvar preferências</button>
+                            </div>
+                        </div>
+                    </section>
+
+                    <!-- ── SOBRE ── -->
+                    <section class="settings-section hidden" id="section-about">
+                        <div class="settings-section-header">
+                            <h2>Sobre o TaskFlow</h2>
+                            <p>Informações sobre o projeto e as tecnologias utilizadas.</p>
+                        </div>
+
+                        <!-- ── VISUALIZAÇÃO ── -->
+                        <div id="about-view">
+                            <div class="settings-card">
+                                <div class="settings-card-title"
+                                    style="display:flex;align-items:center;justify-content:space-between;">
+                                    <span>Sobre o projeto</span>
+                                    <button class="btn-edit-about" onclick="toggleAboutEdit(true)">✏ Editar</button>
+                                </div>
+                                <div class="about-logo">
+                                    <div class="logo-icon" style="width:48px;height:48px;padding:9px;gap:3px;">
+                                        <div class="logo-col"></div>
+                                        <div class="logo-col"></div>
+                                        <div class="logo-col"></div>
+                                    </div>
+                                    <div>
+                                        <div class="about-app-name" id="view-app-name">TaskFlow</div>
+                                        <div class="about-version" id="view-version">Versão 1.0.0 — TCC 2026</div>
+                                    </div>
+                                </div>
+                                <div class="about-desc" id="view-desc">Plataforma de gerenciamento de tarefas e projetos
+                                    inspirada no Trello, desenvolvida como Trabalho de Conclusão de Curso do curso de
+                                    Análise e Desenvolvimento de Sistemas.</div>
+
+                                <div class="settings-card-title" style="margin-top:20px;">Stack tecnológica</div>
+                                <div class="tech-grid" id="view-stacks"></div>
+
+                                <div class="settings-card-title" style="margin-top:20px;">Desenvolvedor</div>
+                                <div class="dev-row">
+                                    <div class="dev-avatar" id="view-dev-avatar">L</div>
+                                    <div>
+                                        <div class="dev-name" id="view-dev-name">Luiz Henrique</div>
+                                        <div class="dev-role" id="view-dev-role">Full Stack Developer</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- ── EDIÇÃO ── -->
+                        <div id="about-edit" class="hidden">
+
+                            <div class="settings-card">
+                                <div class="settings-card-title">Sobre o projeto</div>
+                                <div class="form-group">
+                                    <label for="about-app-name">Nome do app</label>
+                                    <input type="text" id="about-app-name" placeholder="Ex: TaskFlow" maxlength="40" />
+                                </div>
+                                <div class="form-group">
+                                    <label for="about-version">Versão</label>
+                                    <input type="text" id="about-version" placeholder="Ex: 1.0.0 — TCC 2026"
+                                        maxlength="40" />
+                                </div>
+                                <div class="form-group">
+                                    <label for="about-desc">Descrição</label>
+                                    <textarea id="about-desc" rows="3" placeholder="Descreva o projeto..."></textarea>
+                                </div>
+                            </div>
+
+                            <div class="settings-card">
+                                <div class="settings-card-title">Stack tecnológica</div>
+                                <div id="stacks-list"></div>
+                                <button class="btn-add-stack" onclick="addStack()">+ Adicionar tecnologia</button>
+                            </div>
+
+                            <div class="settings-card">
+                                <div class="settings-card-title">Desenvolvedor</div>
+                                <div class="form-group">
+                                    <label for="dev-name-input">Nome</label>
+                                    <input type="text" id="dev-name-input" placeholder="Seu nome" maxlength="60" />
+                                </div>
+                                <div class="form-group">
+                                    <label for="dev-role-input">Cargo / Role</label>
+                                    <select id="dev-role-input">
+                                        <option value="Full Stack Developer">Full Stack Developer</option>
+                                        <option value="Frontend Developer">Frontend Developer</option>
+                                        <option value="Backend Developer">Backend Developer</option>
+                                        <option value="CEO">CEO</option>
+                                        <option value="CTO">CTO</option>
+                                        <option value="Product Owner">Product Owner</option>
+                                        <option value="Scrum Master">Scrum Master</option>
+                                        <option value="Tech Lead">Tech Lead</option>
+                                        <option value="DevOps Engineer">DevOps Engineer</option>
+                                        <option value="Estudante — ADS">Estudante — ADS</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div style="display:flex;justify-content:flex-end;gap:10px;margin-bottom:20px;">
+                                <button class="btn-cancel" onclick="toggleAboutEdit(false)">Cancelar</button>
+                                <button class="btn-save" onclick="saveAllAbout()">
+                                    <span id="label-about">Salvar tudo</span>
+                                    <span class="spinner hidden" id="spinner-about"></span>
+                                </button>
+                            </div>
+                        </div>
+                    </section>
+
+                    <!-- ── CONTA / DANGER ZONE ── -->
+                    <section class="settings-section hidden" id="section-danger">
+                        <div class="settings-section-header">
+                            <h2>Gerenciar conta</h2>
+                            <p>Ações irreversíveis relacionadas à sua conta.</p>
+                        </div>
+
+                        <div class="settings-card danger-card">
+                            <div class="settings-card-title danger-title">⚠️ Excluir conta</div>
+                            <p class="danger-desc">Esta ação é <strong>permanente e irreversível</strong>. Todos os seus
+                                dados, tarefas e workspaces serão excluídos.</p>
+                            <div class="form-group" style="margin-top:16px;">
+                                <label for="delete-password">Confirme sua senha para continuar</label>
+                                <input type="password" id="delete-password" placeholder="••••••••" />
+                            </div>
+                            <div class="error-msg" id="error-delete">⚠ Senha incorreta.</div>
+                            <div class="settings-card-footer">
+                                <button class="btn-danger" id="btn-delete-account" onclick="openDeleteModal()">
+                                    Excluir minha conta
+                                </button>
+                            </div>
+                        </div>
+                    </section>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL CONFIRMAR EXCLUSÃO -->
+    <div class="modal-overlay hidden" id="modal-delete-account">
+        <div class="modal logout-modal">
+            <div class="logout-icon-wrap">
+                <div class="logout-icon" style="background:#FFEBE6;color:#BF2600;font-size:28px;">⚠️</div>
+            </div>
+            <div class="logout-body">
+                <h3 class="logout-title">Excluir conta?</h3>
+                <p class="logout-desc">Todos os seus dados serão permanentemente removidos. Esta ação não pode ser
+                    desfeita.</p>
+            </div>
+            <div class="logout-footer">
+                <button class="btn-cancel" onclick="closeDeleteModal()">Cancelar</button>
+                <button class="btn-logout-confirm" id="btn-confirm-delete" onclick="confirmDeleteAccount()">
+                    <span id="label-delete">Excluir conta</span>
+                    <span class="spinner hidden" id="spinner-delete"></span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- LOGOUT MODAL -->
+    <div class="modal-overlay hidden" id="logout-overlay">
+        <div class="modal logout-modal">
+            <div class="logout-icon-wrap">
+                <div class="logout-icon">⇥</div>
+            </div>
+            <div class="logout-body">
+                <h3 class="logout-title">Sair da conta?</h3>
+                <p class="logout-desc">Você será redirecionado para a página de login.</p>
+            </div>
+            <div class="logout-footer">
+                <button class="btn-cancel" onclick="closeLogout()">Cancelar</button>
+                <button class="btn-logout-confirm" onclick="confirmLogout()"><span id="logout-label">Sair</span><span
+                        class="spinner hidden" id="logout-spinner"></span></button>
+            </div>
+        </div>
+    </div>
+
+    <script src="assets/js/theme.js"></script>
+    <script src="assets/js/settings.js"></script>
+    <script>
+        function toggleAppearance() {
+            const trigger = document.getElementById('appearance-trigger');
+            const panel = document.getElementById('appearance-panel');
+            const isOpen = panel.classList.contains('open');
+            panel.classList.toggle('open', !isOpen);
+            trigger.setAttribute('aria-expanded', String(!isOpen));
+        }
+    </script>
+</body>
+
+</html>

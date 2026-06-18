@@ -4,12 +4,14 @@ public class CreateWorkspaceDto
 {
     public string Name { get; set; } = string.Empty;
     public string? Description { get; set; }
+    public string CompletionMode { get; set; } = "column"; // "column" ou "checkbox"
 }
 
 public class UpdateWorkspaceDto
 {
     public string Name { get; set; } = string.Empty;
     public string? Description { get; set; }
+    public string CompletionMode { get; set; } = "column";
 }
 
 public class WorkspaceResponseDto
@@ -21,6 +23,7 @@ public class WorkspaceResponseDto
     public DateTime CreatedAt { get; set; }
     public string UserRole { get; set; } = string.Empty;
     public int MemberCount { get; set; }
+    public string CompletionMode { get; set; } = "column"; // ← novo
 }
 
 public class WorkspaceMemberResponseDto

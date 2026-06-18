@@ -19,6 +19,7 @@ builder.Services.AddScoped<AuthService>();
 builder.Services.AddScoped<TaskService>();
 builder.Services.AddScoped<WorkspaceService>();
 builder.Services.AddScoped<InviteService>();
+builder.Services.AddScoped<ColumnService>();
 
 // ── HTTP Clients
 builder.Services.AddHttpClient<NotificationClient>(client =>

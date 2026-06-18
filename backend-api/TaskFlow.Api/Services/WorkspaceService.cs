@@ -30,6 +30,7 @@ public class WorkspaceService
             OwnerId = m.Workspace.OwnerId,
             CreatedAt = m.Workspace.CreatedAt,
             UserRole = m.Role,
+            CompletionMode = m.Workspace.CompletionMode,
             MemberCount = _db.WorkspaceMembers.Count(wm => wm.WorkspaceId == m.WorkspaceId)
         }).ToList();
     }
@@ -50,6 +51,7 @@ public class WorkspaceService
             OwnerId = membership.Workspace.OwnerId,
             CreatedAt = membership.Workspace.CreatedAt,
             UserRole = membership.Role,
+            CompletionMode = membership.Workspace.CompletionMode,
             MemberCount = await _db.WorkspaceMembers.CountAsync(m => m.WorkspaceId == workspaceId)
         };
     }
@@ -67,6 +69,7 @@ public class WorkspaceService
         {
             Name = dto.Name.Trim(),
             Description = dto.Description?.Trim() ?? string.Empty,
+            CompletionMode = dto.CompletionMode ?? "column",
             OwnerId = userId,
             CreatedAt = DateTime.UtcNow
         };
@@ -92,6 +95,7 @@ public class WorkspaceService
             Description = workspace.Description,
             OwnerId = workspace.OwnerId,
             CreatedAt = workspace.CreatedAt,
+            CompletionMode = workspace.CompletionMode,
             UserRole = "Owner",
             MemberCount = 1
         }, null);
@@ -110,6 +114,7 @@ public class WorkspaceService
 
         membership.Workspace.Name = dto.Name.Trim();
         membership.Workspace.Description = dto.Description?.Trim() ?? string.Empty;
+        membership.Workspace.CompletionMode = dto.CompletionMode ?? "column";
         await _db.SaveChangesAsync();
 
         return (true, null);
