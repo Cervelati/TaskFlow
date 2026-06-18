@@ -2,25 +2,25 @@
 
 const API = 'http://localhost:5000/api';
 
-const params      = new URLSearchParams(window.location.search);
+const params = new URLSearchParams(window.location.search);
 const workspaceId = parseInt(params.get('id'));
 
 const COVER_COLORS = [
-    '#0065FF','#6554C0','#36B37E','#FF5630','#00B8D9',
-    '#FF991F','#403294','#006644','#BF2600','#172B4D',
-    '#1D7AFC','#E56910','#943D73','#5E4DB2','#216E4E',
+    '#0065FF', '#6554C0', '#36B37E', '#FF5630', '#00B8D9',
+    '#FF991F', '#403294', '#006644', '#BF2600', '#172B4D',
+    '#1D7AFC', '#E56910', '#943D73', '#5E4DB2', '#216E4E',
 ];
 
 let state = {
-    tasks:          [],
-    columns:        [],
-    workspace:      null,
-    myRole:         null,
+    tasks: [],
+    columns: [],
+    workspace: null,
+    myRole: null,
     completionMode: 'column',
-    editingId:      null,
-    targetColId:    null,
+    editingId: null,
+    targetColId: null,
     deletingTaskId: null,
-    colMeta:        {},
+    colMeta: {},
     taskChecklists: {},
 };
 
@@ -28,13 +28,13 @@ let state = {
    PERSISTÊNCIA LOCAL
 ══════════════════════════════════════════════════ */
 function loadLocal() {
-    try { const cm = localStorage.getItem(`tf_colmeta_${workspaceId}`);    if (cm) state.colMeta        = JSON.parse(cm); } catch (_) {}
-    try { const tc = localStorage.getItem(`tf_checklists_${workspaceId}`); if (tc) state.taskChecklists = JSON.parse(tc); } catch (_) {}
+    try { const cm = localStorage.getItem(`tf_colmeta_${workspaceId}`); if (cm) state.colMeta = JSON.parse(cm); } catch (_) { }
+    try { const tc = localStorage.getItem(`tf_checklists_${workspaceId}`); if (tc) state.taskChecklists = JSON.parse(tc); } catch (_) { }
 }
-function saveColMeta()    { localStorage.setItem(`tf_colmeta_${workspaceId}`,    JSON.stringify(state.colMeta)); }
+function saveColMeta() { localStorage.setItem(`tf_colmeta_${workspaceId}`, JSON.stringify(state.colMeta)); }
 function saveChecklists() { localStorage.setItem(`tf_checklists_${workspaceId}`, JSON.stringify(state.taskChecklists)); }
-function getColMeta(colId)      { if (!state.colMeta[colId])        state.colMeta[colId]        = { tags: [] }; return state.colMeta[colId]; }
-function getTaskChecklist(tid)  { if (!state.taskChecklists[tid])   state.taskChecklists[tid]   = [];           return state.taskChecklists[tid]; }
+function getColMeta(colId) { if (!state.colMeta[colId]) state.colMeta[colId] = { tags: [] }; return state.colMeta[colId]; }
+function getTaskChecklist(tid) { if (!state.taskChecklists[tid]) state.taskChecklists[tid] = []; return state.taskChecklists[tid]; }
 
 /* ══════════════════════════════════════════════════
    INIT
@@ -63,7 +63,7 @@ function authHeaders() {
     return { 'Content-Type': 'application/json', 'Authorization': `Bearer ${localStorage.getItem('token')}` };
 }
 async function apiFetch(path, opts = {}) {
-    const res = await fetch(`${API}${path}`, { ...opts, headers: { ...authHeaders(), ...(opts.headers||{}) } });
+    const res = await fetch(`${API}${path}`, { ...opts, headers: { ...authHeaders(), ...(opts.headers || {}) } });
     if (res.status === 401) { window.location.href = 'login.html'; return null; }
     return res;
 }
@@ -75,8 +75,8 @@ async function loadWorkspace() {
     try {
         const res = await apiFetch(`/workspaces/${workspaceId}`);
         if (!res || !res.ok) { window.location.href = 'workspace.html'; return; }
-        state.workspace      = await res.json();
-        state.myRole         = state.workspace.userRole;
+        state.workspace = await res.json();
+        state.myRole = state.workspace.userRole;
         state.completionMode = state.workspace.completionMode || 'column';
 
         document.getElementById('board-title').textContent = `🏢 ${state.workspace.name}`;
@@ -97,25 +97,25 @@ async function loadMembers() {
     try {
         const res = await apiFetch(`/workspaces/${workspaceId}/members`);
         if (!res || !res.ok) return;
-        const members   = await res.json();
+        const members = await res.json();
         const container = document.getElementById('board-members');
         container.innerHTML = '';
-        const colors = ['#0052CC','#6554C0','#36B37E','#FF5630','#00B8D9','#403294'];
-        members.slice(0,4).forEach((m,i) => {
+        const colors = ['#0052CC', '#6554C0', '#36B37E', '#FF5630', '#00B8D9', '#403294'];
+        members.slice(0, 4).forEach((m, i) => {
             const av = document.createElement('div');
-            av.className       = 'board-avatar';
+            av.className = 'board-avatar';
             av.style.background = colors[i % colors.length];
-            av.title           = m.userName;
-            av.textContent     = m.userName.split(' ').slice(0,2).map(w=>w[0].toUpperCase()).join('');
+            av.title = m.userName;
+            av.textContent = m.userName.split(' ').slice(0, 2).map(w => w[0].toUpperCase()).join('');
             container.appendChild(av);
         });
         if (members.length > 4) {
             const more = document.createElement('div');
-            more.className   = 'board-avatar-more';
-            more.textContent = `+${members.length-4}`;
+            more.className = 'board-avatar-more';
+            more.textContent = `+${members.length - 4}`;
             container.appendChild(more);
         }
-    } catch (_) {}
+    } catch (_) { }
 }
 
 /* ══════════════════════════════════════════════════
@@ -129,9 +129,9 @@ async function loadColumns() {
         await loadTasks();
     } catch {
         state.columns = [
-            { id: 1, name: 'A fazer',      color: '#DFE1E6', position: 0, isFinished: false },
+            { id: 1, name: 'A fazer', color: '#DFE1E6', position: 0, isFinished: false },
             { id: 2, name: 'Em andamento', color: '#0065FF', position: 1, isFinished: false },
-            { id: 3, name: 'Concluído',    color: '#36B37E', position: 2, isFinished: true  },
+            { id: 3, name: 'Concluído', color: '#36B37E', position: 2, isFinished: true },
         ];
         await loadTasks();
     }
@@ -148,7 +148,7 @@ async function addColumn() {
         state.columns.push(await res.json());
         updateColSelect();
         render();
-    } catch {}
+    } catch { }
 }
 
 async function saveColumnFull(colId, name, color, isFinished) {
@@ -156,8 +156,8 @@ async function saveColumnFull(colId, name, color, isFinished) {
     if (!col) return;
 
     if (isFinished) state.columns.forEach(c => { c.isFinished = false; });
-    col.name       = name;
-    col.color      = color;
+    col.name = name;
+    col.color = color;
     col.isFinished = isFinished;
 
     try {
@@ -175,7 +175,7 @@ async function saveColumnFull(colId, name, color, isFinished) {
                 body: JSON.stringify({ name, color, position: col.position, isFinished })
             });
         }
-    } catch {}
+    } catch { }
 
     updateColSelect();
     render();
@@ -192,7 +192,7 @@ async function saveColumnName(colId, newName) {
         col.name = newName;
         updateColSelect();
         render();
-    } catch {}
+    } catch { }
 }
 
 async function deleteColumn(colId) {
@@ -200,13 +200,13 @@ async function deleteColumn(colId) {
     try {
         const res = await apiFetch(`/columns/${colId}`, { method: 'DELETE' });
         if (!res || !res.ok) return;
-        state.columns    = state.columns.filter(c => c.id !== colId);
-        state.tasks      = state.tasks.filter(t => t.columnId !== colId);
+        state.columns = state.columns.filter(c => c.id !== colId);
+        state.tasks = state.tasks.filter(t => t.columnId !== colId);
         delete state.colMeta[colId];
         saveColMeta();
         updateColSelect();
         render();
-    } catch {}
+    } catch { }
 }
 
 function updateColSelect() {
@@ -331,8 +331,8 @@ function addTagToCol() {
     const input = document.getElementById('col-edit-tag-input');
     const label = input.value.trim();
     if (!label) return;
-    const hex  = document.getElementById('col-edit-tag-color').value;
-    const r = parseInt(hex.slice(1,3),16), g = parseInt(hex.slice(3,5),16), b = parseInt(hex.slice(5,7),16);
+    const hex = document.getElementById('col-edit-tag-color').value;
+    const r = parseInt(hex.slice(1, 3), 16), g = parseInt(hex.slice(3, 5), 16), b = parseInt(hex.slice(5, 7), 16);
     getColMeta(editingColId).tags.push({ label, bg: `rgba(${r},${g},${b},0.18)`, text: hex });
     saveColMeta();
     input.value = '';
@@ -348,8 +348,8 @@ function removeTagFromCol(index) {
 
 async function colEditSave() {
     if (!editingColId) return;
-    const name     = document.getElementById('col-edit-name').value.trim() || 'Sem nome';
-    const color    = document.getElementById('col-edit-preview').style.background;
+    const name = document.getElementById('col-edit-name').value.trim() || 'Sem nome';
+    const color = document.getElementById('col-edit-preview').style.background;
     const finished = document.getElementById('col-edit-finish-toggle').classList.contains('on');
     await saveColumnFull(editingColId, name, color, finished);
     closeColEditPanel();
@@ -361,10 +361,10 @@ function colEditDelete() {
     if (!editingColId) return;
     _deletingColId = editingColId;
 
-    const col      = state.columns.find(c => c.id === editingColId);
+    const col = state.columns.find(c => c.id === editingColId);
     const colTasks = state.tasks.filter(t => t.columnId === editingColId).length;
 
-    const descEl   = document.getElementById('modal-delete-col-desc');
+    const descEl = document.getElementById('modal-delete-col-desc');
     const confirmBtn = document.getElementById('btn-confirm-delete-col');
 
     if (colTasks > 0) {
@@ -382,8 +382,8 @@ function colEditDelete() {
 async function confirmColDelete() {
     if (!_deletingColId) return;
 
-    const btn    = document.getElementById('btn-confirm-delete-col');
-    const label  = document.getElementById('delete-col-label');
+    const btn = document.getElementById('btn-confirm-delete-col');
+    const label = document.getElementById('delete-col-label');
     const spinner = document.getElementById('delete-col-spinner');
     btn.disabled = true;
     label.textContent = 'Removendo...';
@@ -396,7 +396,7 @@ async function confirmColDelete() {
         toast('Mova ou remova as tarefas antes de deletar esta coluna.', 'error');
     } else if (res?.ok) {
         state.columns = state.columns.filter(c => c.id !== _deletingColId);
-        state.tasks   = state.tasks.filter(t => t.columnId !== _deletingColId);
+        state.tasks = state.tasks.filter(t => t.columnId !== _deletingColId);
         delete state.colMeta[_deletingColId];
         saveColMeta();
         updateColSelect();
@@ -450,6 +450,7 @@ function render() {
         addBtn.innerHTML = `<button onclick="addColumn()">+ Adicionar coluna</button>`;
         board.appendChild(addBtn);
     }
+    initSortable()
 }
 
 function buildColumn(col, tasks, canEdit) {
@@ -460,9 +461,9 @@ function buildColumn(col, tasks, canEdit) {
 
     // Capa clicável
     const cover = document.createElement('div');
-    cover.className        = 'col-cover';
+    cover.className = 'col-cover';
     cover.style.background = col.color;
-    cover.innerHTML        = `<div class="col-cover-edit-hint">✏ Editar coluna</div>`;
+    cover.innerHTML = `<div class="col-cover-edit-hint">✏ Editar coluna</div>`;
     if (canEdit) cover.addEventListener('click', () => openColEditPanel(col.id));
     wrap.appendChild(cover);
 
@@ -478,19 +479,19 @@ function buildColumn(col, tasks, canEdit) {
             const inp = document.createElement('input');
             inp.className = 'col-name-input';
             inp.value = col.name;
-            inp.addEventListener('blur',    () => saveColumnName(col.id, inp.value));
+            inp.addEventListener('blur', () => saveColumnName(col.id, inp.value));
             inp.addEventListener('keydown', e => { if (e.key === 'Enter') inp.blur(); });
             return inp;
-          })()
+        })()
         : (() => {
             const span = document.createElement('span');
-            span.className   = 'col-title';
+            span.className = 'col-title';
             span.textContent = col.name;
             return span;
-          })();
+        })();
 
     const count = document.createElement('span');
-    count.className   = 'col-count';
+    count.className = 'col-count';
     count.textContent = tasks.length;
 
     left.appendChild(nameEl);
@@ -518,7 +519,7 @@ function buildColumn(col, tasks, canEdit) {
 
     // Add card
     const addBtn = document.createElement('button');
-    addBtn.className   = 'add-card-btn';
+    addBtn.className = 'add-card-btn';
     addBtn.textContent = '+ Adicionar tarefa';
     addBtn.addEventListener('click', () => openModal(col.id));
     wrap.appendChild(addBtn);
@@ -533,19 +534,19 @@ function buildCard(task, col) {
     card.dataset.id = task.id;
 
     const canDelete = state.myRole === 'Owner' || state.myRole === 'Admin';
-    const meta      = getColMeta(col.id);
+    const meta = getColMeta(col.id);
 
     const tagsHtml = meta.tags.length > 0
         ? `<div class="card-tags">${meta.tags.map(t =>
             `<span class="card-tag-pill" style="background:${t.bg};color:${t.text}">${escHtml(t.label)}</span>`
-          ).join('')}</div>`
+        ).join('')}</div>`
         : '';
 
     const dateStr = task.dueDate
         ? `<div class="card-date">📅 ${formatDisplay(task.dueDate)} ${deadlineBadge(task.dueDate)}</div>`
         : '';
 
-    const otherCols    = state.columns.filter(c => c.id !== col.id);
+    const otherCols = state.columns.filter(c => c.id !== col.id);
     const moveDropdown = otherCols.length > 0 ? `
         <div class="card-move-wrap">
             <button class="card-btn btn-move" onclick="event.stopPropagation(); toggleMoveMenu(this)">↔ Mover</button>
@@ -553,7 +554,7 @@ function buildCard(task, col) {
                 ${otherCols.map(c => `
                     <div class="move-menu-item"
                         onclick="event.stopPropagation(); moveTask(${task.id}, ${c.id}); closeMoveMenus()">
-                        ${c.isFinished && state.completionMode==='column' ? '✔ ' : ''}${escHtml(c.name)}
+                        ${c.isFinished && state.completionMode === 'column' ? '✔ ' : ''}${escHtml(c.name)}
                     </div>`).join('')}
             </div>
         </div>` : '';
@@ -581,10 +582,10 @@ function buildCard(task, col) {
    CHECKLIST
 ══════════════════════════════════════════════════ */
 function buildChecklist(task) {
-    const items   = getTaskChecklist(task.id);
-    const total   = items.length;
-    const done    = items.filter(i => i.checked).length;
-    const pct     = total > 0 ? Math.round((done/total)*100) : 0;
+    const items = getTaskChecklist(task.id);
+    const total = items.length;
+    const done = items.filter(i => i.checked).length;
+    const pct = total > 0 ? Math.round((done / total) * 100) : 0;
     const allDone = total > 0 && done === total;
 
     const wrap = document.createElement('div');
@@ -593,10 +594,10 @@ function buildChecklist(task) {
     wrap.innerHTML = `
         <div class="card-checklist-header">
             <span class="card-checklist-title">☑ Checklist</span>
-            <span class="card-checklist-count ${allDone?'done':''}">${done}/${total}</span>
+            <span class="card-checklist-count ${allDone ? 'done' : ''}">${done}/${total}</span>
         </div>
         ${total > 0 ? `<div class="checklist-progress-bar">
-            <div class="checklist-progress-fill ${allDone?'complete':''}" style="width:${pct}%"></div>
+            <div class="checklist-progress-fill ${allDone ? 'complete' : ''}" style="width:${pct}%"></div>
         </div>` : ''}`;
 
     const list = document.createElement('div');
@@ -647,7 +648,7 @@ function addChecklistItem(taskId, input) {
    MOVER TASK
 ══════════════════════════════════════════════════ */
 async function moveTask(taskId, destColId) {
-    const task    = state.tasks.find(t => t.id === taskId);
+    const task = state.tasks.find(t => t.id === taskId);
     const destCol = state.columns.find(c => c.id === destColId);
     if (!task || !destCol) return;
 
@@ -657,24 +658,24 @@ async function moveTask(taskId, destColId) {
         const res = await apiFetch(`/tasks/${taskId}`, {
             method: 'PUT',
             body: JSON.stringify({
-                title:       task.title,
+                title: task.title,
                 description: task.description || '',
                 isCompleted: isFinished,
-                dueDate:     task.dueDate || null,
-                status:      destCol.name,
-                columnId:    destColId        // ← id direto
+                dueDate: task.dueDate || null,
+                status: destCol.name,
+                columnId: destColId        // ← id direto
             })
         });
         if (!res || !res.ok) return;
-        task.columnId    = destColId;
-        task.status      = destCol.name;
+        task.columnId = destColId;
+        task.status = destCol.name;
         task.isCompleted = isFinished;
         render();
     } catch (e) { console.error(e); }
 }
 
 function toggleMoveMenu(btn) {
-    const menu   = btn.nextElementSibling;
+    const menu = btn.nextElementSibling;
     const isOpen = !menu.classList.contains('hidden');
     closeMoveMenus();
     if (!isOpen) menu.classList.remove('hidden');
@@ -689,13 +690,13 @@ document.addEventListener('click', closeMoveMenus);
 ══════════════════════════════════════════════════ */
 function deadlineBadge(iso) {
     if (!iso) return '';
-    const today = new Date(); today.setHours(0,0,0,0);
-    const due   = new Date(iso);
-    const diff  = Math.floor((due - today) / 86400000);
-    if (diff < 0)   return `<span class="deadline-badge overdue">🔴 Em atraso</span>`;
+    const today = new Date(); today.setHours(0, 0, 0, 0);
+    const due = new Date(iso);
+    const diff = Math.floor((due - today) / 86400000);
+    if (diff < 0) return `<span class="deadline-badge overdue">🔴 Em atraso</span>`;
     if (diff === 0) return `<span class="deadline-badge today">🟡 Vence hoje</span>`;
     if (diff === 1) return `<span class="deadline-badge soon">🟡 Vence amanhã</span>`;
-    if (diff <= 3)  return `<span class="deadline-badge soon">🟠 ${diff} dias</span>`;
+    if (diff <= 3) return `<span class="deadline-badge soon">🟠 ${diff} dias</span>`;
     return `<span class="deadline-badge ok">🟢 No prazo</span>`;
 }
 
@@ -726,13 +727,13 @@ async function confirmDeleteTask() {
 
 function openModal(colId = null, editId = null) {
     state.targetColId = colId ?? state.columns[0]?.id ?? null;
-    state.editingId   = editId;
+    state.editingId = editId;
 
-    const inp     = document.getElementById('task-title');
-    const desc    = document.getElementById('task-desc');
+    const inp = document.getElementById('task-title');
+    const desc = document.getElementById('task-desc');
     const dateSel = document.getElementById('task-date');
-    const colSel  = document.getElementById('task-col');
-    const err     = document.getElementById('error-msg');
+    const colSel = document.getElementById('task-col');
+    const err = document.getElementById('error-msg');
 
     err.classList.remove('visible');
 
@@ -753,10 +754,10 @@ function openModal(colId = null, editId = null) {
     if (editId) {
         const task = state.tasks.find(t => t.id === editId);
         if (!task) return;
-        inp.value     = task.title;
-        desc.value    = task.description || '';
+        inp.value = task.title;
+        desc.value = task.description || '';
         dateSel.value = task.dueDate ? task.dueDate.split('T')[0] : '';
-        colSel.value  = task.columnId ?? state.targetColId;
+        colSel.value = task.columnId ?? state.targetColId;
         document.getElementById('save-label').textContent = 'Salvar alterações';
         // Título display no header
         const titleDisplay = document.getElementById('modal-task-title-display');
@@ -775,7 +776,7 @@ function openModal(colId = null, editId = null) {
         try {
             const u = JSON.parse(localStorage.getItem('user'));
             avatarEl.textContent = u?.name
-                ? u.name.split(' ').slice(0,2).map(w => w[0].toUpperCase()).join('')
+                ? u.name.split(' ').slice(0, 2).map(w => w[0].toUpperCase()).join('')
                 : 'EU';
         } catch (_) { avatarEl.textContent = 'EU'; }
     }
@@ -836,7 +837,7 @@ function renderTaskComments(taskId) {
     }
     list.innerHTML = comments.map(c => `
         <div class="task-comment-item">
-            <div class="task-comment-item-avatar" style="background:${c.color||'#0052CC'}">${c.initials}</div>
+            <div class="task-comment-item-avatar" style="background:${c.color || '#0052CC'}">${c.initials}</div>
             <div class="task-comment-item-body">
                 <div class="task-comment-item-meta">
                     <span class="task-comment-item-author">${escHtml(c.author)}</span>
@@ -852,7 +853,7 @@ function submitTaskComment() {
     const taskId = state.editingId;
     if (!taskId) return;
     const input = document.getElementById('task-comment-input');
-    const text  = input.value.trim();
+    const text = input.value.trim();
     if (!text) return;
 
     let name = 'Você';
@@ -860,11 +861,11 @@ function submitTaskComment() {
     try {
         const u = JSON.parse(localStorage.getItem('user'));
         if (u?.name) { name = u.name; }
-        const colors = ['#0052CC','#6554C0','#36B37E','#FF5630','#00B8D9','#403294'];
+        const colors = ['#0052CC', '#6554C0', '#36B37E', '#FF5630', '#00B8D9', '#403294'];
         color = colors[name.length % colors.length];
-    } catch (_) {}
+    } catch (_) { }
 
-    const initials = name.split(' ').slice(0,2).map(w => w[0].toUpperCase()).join('');
+    const initials = name.split(' ').slice(0, 2).map(w => w[0].toUpperCase()).join('');
     const comments = getTaskComments(taskId);
     comments.push({
         author: name, initials, color, text,
@@ -883,13 +884,13 @@ function handleCommentKey(e) {
 }
 
 async function saveTask() {
-    const inp     = document.getElementById('task-title');
-    const desc    = document.getElementById('task-desc');
+    const inp = document.getElementById('task-title');
+    const desc = document.getElementById('task-desc');
     const dateSel = document.getElementById('task-date');
-    const colSel  = document.getElementById('task-col');
-    const err     = document.getElementById('error-msg');
-    const btn     = document.getElementById('btn-save');
-    const label   = document.getElementById('save-label');
+    const colSel = document.getElementById('task-col');
+    const err = document.getElementById('error-msg');
+    const btn = document.getElementById('btn-save');
+    const label = document.getElementById('save-label');
     const spinner = document.getElementById('save-spinner');
 
     const titleVal = inp.value.trim();
@@ -902,21 +903,21 @@ async function saveTask() {
 
     // colSel.value agora é o ID da coluna
     const selectedColId = parseInt(colSel.value);
-    const destCol       = state.columns.find(c => c.id === selectedColId);
-    const isFinished    = destCol?.isFinished === true && state.completionMode === 'column';
+    const destCol = state.columns.find(c => c.id === selectedColId);
+    const isFinished = destCol?.isFinished === true && state.completionMode === 'column';
 
     try {
         if (state.editingId) {
             const task = state.tasks.find(t => t.id === state.editingId);
-            const res  = await apiFetch(`/tasks/${state.editingId}`, {
+            const res = await apiFetch(`/tasks/${state.editingId}`, {
                 method: 'PUT',
                 body: JSON.stringify({
-                    title:       titleVal,
+                    title: titleVal,
                     description: desc.value.trim(),
                     isCompleted: isFinished,
-                    dueDate:     dateSel.value || null,
-                    status:      destCol?.name || task.status,
-                    columnId:    selectedColId
+                    dueDate: dateSel.value || null,
+                    status: destCol?.name || task.status,
+                    columnId: selectedColId
                 })
             });
             if (res && res.ok) {
@@ -928,11 +929,11 @@ async function saveTask() {
             const res = await apiFetch('/tasks', {
                 method: 'POST',
                 body: JSON.stringify({
-                    title:       titleVal,
+                    title: titleVal,
                     description: desc.value.trim(),
-                    dueDate:     dateSel.value || null,
-                    status:      destCol?.name || 'Todo',
-                    columnId:    selectedColId,
+                    dueDate: dateSel.value || null,
+                    status: destCol?.name || 'Todo',
+                    columnId: selectedColId,
                     workspaceId: workspaceId
                 })
             });
@@ -956,7 +957,7 @@ async function saveTask() {
    LOGOUT
 ══════════════════════════════════════════════════ */
 function handleLogout() { document.getElementById('logout-overlay').classList.remove('hidden'); }
-function closeLogout()   { document.getElementById('logout-overlay').classList.add('hidden'); }
+function closeLogout() { document.getElementById('logout-overlay').classList.add('hidden'); }
 function confirmLogout() {
     const btn = document.querySelector('.btn-logout-confirm');
     const label = document.getElementById('logout-label');
@@ -979,21 +980,136 @@ document.addEventListener('keydown', e => {
    HELPERS
 ══════════════════════════════════════════════════ */
 function escHtml(str) {
-    return String(str).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+    return String(str).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
 }
 function formatDisplay(iso) {
     if (!iso) return '';
     const d = new Date(iso);
-    const today = new Date(); today.setHours(0,0,0,0);
-    const diff  = Math.floor((d - today) / 86400000);
-    if (diff === 0)  return 'hoje';
-    if (diff === 1)  return 'amanhã';
+    const today = new Date(); today.setHours(0, 0, 0, 0);
+    const diff = Math.floor((d - today) / 86400000);
+    if (diff === 0) return 'hoje';
+    if (diff === 1) return 'amanhã';
     if (diff === -1) return 'ontem';
-    return d.toLocaleDateString('pt-BR', { day:'2-digit', month:'short' });
+    return d.toLocaleDateString('pt-BR', { day: '2-digit', month: 'short' });
 }
 function toast(msg, type = '') {
     const t = document.createElement('div');
     t.className = `toast ${type}`; t.textContent = msg;
     document.body.appendChild(t);
     setTimeout(() => t.remove(), 3000);
+}
+
+/* ══════════════════════════════════════════════════
+   DRAG AND DROP — SortableJS
+══════════════════════════════════════════════════ */
+let _colSortable = null;
+const _cardSortables = [];
+
+function initSortable() {
+    const board = document.getElementById('kanban-board');
+    if (!board) return;
+
+    // Destroy instâncias anteriores
+    if (_colSortable) _colSortable.destroy();
+    _cardSortables.forEach(s => s.destroy());
+    _cardSortables.length = 0;
+
+    const canEdit = state.myRole === 'Owner' || state.myRole === 'Admin';
+
+    // Drag de colunas — apenas Owner/Admin, arrasta pela capa
+    if (canEdit) {
+        _colSortable = Sortable.create(board, {
+            animation: 150,
+            handle: '.col-cover',
+            draggable: '.column',
+            ghostClass: 'sortable-ghost',
+            chosenClass: 'sortable-chosen',
+            dragClass: 'sortable-drag',
+            filter: '.add-column-btn',
+            onEnd(evt) {
+                const { oldIndex, newIndex } = evt;
+                if (oldIndex === newIndex) return;
+
+                const cols = [...state.columns];
+                const [moved] = cols.splice(oldIndex, 1);
+                cols.splice(newIndex, 0, moved);
+                state.columns = cols;
+
+                // Persiste posições na API
+                state.columns.forEach((c, i) => { c.position = i; });
+                Promise.all(state.columns.map(c =>
+                    apiFetch(`/columns/${c.id}`, {
+                        method: 'PUT',
+                        body: JSON.stringify({ name: c.name, color: c.color, position: c.position, isFinished: c.isFinished })
+                    })
+                )).catch(() => { });
+
+                updateColSelect();
+            }
+        });
+    }
+
+    // Drag de cards entre colunas
+    board.querySelectorAll('.cards-list').forEach(list => {
+        const colEl = list.closest('.column');
+        const colId = parseInt(colEl?.dataset.colId);
+
+        const sortable = Sortable.create(list, {
+            animation: 150,
+            group: 'cards',
+            draggable: '.card',
+            ghostClass: 'sortable-ghost',
+            chosenClass: 'sortable-chosen',
+            dragClass: 'sortable-drag',
+            onEnd(evt) {
+                // Remove empty-state da coluna de destino se existir
+                evt.to.querySelector('.empty-state')?.remove();
+
+                // Adiciona empty-state na coluna de origem se ficou vazia
+                if (evt.from !== evt.to && evt.from.querySelectorAll('.card').length === 0) {
+                    const empty = document.createElement('div');
+                    empty.className = 'empty-state';
+                    empty.textContent = 'Nenhuma tarefa aqui.';
+                    evt.from.appendChild(empty);
+                }
+
+                const taskId = parseInt(evt.item.dataset.id);
+                const toColEl = evt.to.closest('.column');
+                const toColId = parseInt(toColEl?.dataset.colId);
+                if (!taskId || isNaN(toColId)) return;
+
+                const task = state.tasks.find(t => t.id === taskId);
+                const destCol = state.columns.find(c => c.id === toColId);
+                if (!task || !destCol) return;
+
+                const isFinished = destCol.isFinished === true && state.completionMode === 'column';
+
+                task.columnId = toColId;
+                task.status = destCol.name;
+                task.isCompleted = isFinished;
+
+                // Atualiza contadores visualmente
+                board.querySelectorAll('.column').forEach(col => {
+                    const cid = parseInt(col.dataset.colId);
+                    const count = col.querySelector('.col-count');
+                    if (count) count.textContent = state.tasks.filter(t => t.columnId === cid).length;
+                });
+
+                // Sincroniza com API
+                apiFetch(`/tasks/${taskId}`, {
+                    method: 'PUT',
+                    body: JSON.stringify({
+                        title: task.title,
+                        description: task.description || '',
+                        isCompleted: isFinished,
+                        dueDate: task.dueDate || null,
+                        status: destCol.name,
+                        columnId: toColId
+                    })
+                }).catch(() => { });
+                render();
+            }
+        });
+        _cardSortables.push(sortable);
+    });
 }

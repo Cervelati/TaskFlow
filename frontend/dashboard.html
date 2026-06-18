@@ -11,7 +11,6 @@
         rel="stylesheet" />
     <link rel="stylesheet" href="assets/css/dashboard.css" />
     <link rel="stylesheet" href="assets/css/theme-vars.css" />
-   <!-- <link rel="stylesheet" href="assets/css/columnExtra.css" /> -->
     <link rel="stylesheet" href="assets/css/kanban.css" />
 </head>
 
@@ -82,7 +81,6 @@
                 </div>
             </div>
 
-
             <div class="sidebar-user">
                 <div class="user-avatar" id="user-avatar">LH</div>
                 <div class="user-info">
@@ -103,7 +101,6 @@
                 <button class="btn-new" onclick="openModal()">+ Nova tarefa</button>
             </div>
 
-            <!-- Kanban gerado dinamicamente pelo JS -->
             <div class="kanban" id="kanban-board"></div>
         </div>
     </div>
@@ -128,6 +125,7 @@
         </div>
     </div>
 
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Sortable/1.15.2/Sortable.min.js"></script>
     <script src="assets/js/theme.js"></script>
     <script src="assets/js/dashboard.js"></script>
     <script>

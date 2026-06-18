@@ -11,13 +11,13 @@ const COVER_COLORS = [
 ];
 
 let state = {
-    tasks:          [],
-    columns:        [],
+    tasks: [],
+    columns: [],
     completionMode: 'column',
-    editingId:      null,
-    targetColId:    null,
-    colMeta:        {},
-    taskComments:   {},
+    editingId: null,
+    targetColId: null,
+    colMeta: {},
+    taskComments: {},
     taskChecklists: {},
 };
 
@@ -29,10 +29,10 @@ let state = {
     if (!token) { window.location.href = 'login.html'; return; }
 
     const saved = loadState();
-    if (saved?.tasks)          state.tasks          = saved.tasks;
+    if (saved?.tasks) state.tasks = saved.tasks;
     if (saved?.completionMode) state.completionMode = saved.completionMode;
-    if (saved?.colMeta)        state.colMeta        = saved.colMeta;
-    if (saved?.taskComments)   state.taskComments   = saved.taskComments;
+    if (saved?.colMeta) state.colMeta = saved.colMeta;
+    if (saved?.taskComments) state.taskComments = saved.taskComments;
     if (saved?.taskChecklists) state.taskChecklists = saved.taskChecklists;
 
     const { theme, mode } = loadTheme();
@@ -52,8 +52,8 @@ let state = {
 ══════════════════════════════════════════════════ */
 function toggleAppearance() {
     const trigger = document.getElementById('appearance-trigger');
-    const panel   = document.getElementById('appearance-panel');
-    const isOpen  = panel.classList.contains('open');
+    const panel = document.getElementById('appearance-panel');
+    const isOpen = panel.classList.contains('open');
     panel.classList.toggle('open', !isOpen);
     trigger.setAttribute('aria-expanded', String(!isOpen));
 }
@@ -104,20 +104,34 @@ function colIdEq(a, b) {
 ══════════════════════════════════════════════════ */
 function migrateTasks() {
     let changed = false;
+    const fallbackId = state.columns[0]?.id ?? null;
+
     state.tasks = state.tasks.map(t => {
-        // Já tem colId correto
-        if (t.colId !== undefined && t.colId !== null) {
-            const normalized = normalizeColId(t.colId);
-            if (normalized !== t.colId) { changed = true; return { ...t, colId: normalized }; }
-            return t;
+        // Sem colId — migra de col (nome)
+        if (t.colId === undefined || t.colId === null) {
+            const col = state.columns.find(c => c.name === t.col);
+            changed = true;
+            const colId = normalizeColId(col?.id ?? fallbackId);
+            const { col: _col, ...rest } = t;
+            return { ...rest, colId };
         }
-        // Migra de col (nome) para colId
-        const col = state.columns.find(c => c.name === t.col);
-        changed = true;
-        const colId = normalizeColId(col?.id ?? state.columns[0]?.id ?? null);
-        const { col: _col, ...rest } = t; // remove campo 'col' antigo
-        return { ...rest, colId };
+
+        const normalized = normalizeColId(t.colId);
+
+        // colId existe mas não corresponde a nenhuma coluna atual — reassocia
+        const exists = state.columns.some(c => colIdEq(c.id, normalized));
+        if (!exists) {
+            changed = true;
+            // Tenta encontrar pelo nome antigo se ainda existir
+            const byName = state.columns.find(c => c.name === t.col);
+            return { ...t, colId: normalizeColId(byName?.id ?? fallbackId) };
+        }
+
+        // Normaliza tipo se necessário
+        if (normalized !== t.colId) { changed = true; return { ...t, colId: normalized }; }
+        return t;
     });
+
     if (changed) saveState();
 }
 
@@ -152,15 +166,15 @@ async function loadColumns() {
         render();
     } catch {
         state.columns = [
-            { id: 'local-1', name: 'A fazer',      color: '#DFE1E6', position: 0, isFinished: false },
+            { id: 'local-1', name: 'A fazer', color: '#DFE1E6', position: 0, isFinished: false },
             { id: 'local-2', name: 'Em andamento', color: '#0065FF', position: 1, isFinished: false },
-            { id: 'local-3', name: 'Concluído',    color: '#36B37E', position: 2, isFinished: true  },
+            { id: 'local-3', name: 'Concluído', color: '#36B37E', position: 2, isFinished: true },
         ];
         if (state.tasks.length === 0) {
             state.tasks = [
                 { id: uid(), title: 'Criar tela de dashboard Kanban', tag: 'frontend', date: '2025-06-10', colId: 'local-1', completed: false },
-                { id: uid(), title: 'Implementar filtros de tarefa',  tag: 'backend',  date: '2025-06-12', colId: 'local-1', completed: false },
-                { id: uid(), title: 'Configurar envio de e-mail',     tag: 'urgente',  date: formatDate(new Date()), colId: 'local-1', completed: false },
+                { id: uid(), title: 'Implementar filtros de tarefa', tag: 'backend', date: '2025-06-12', colId: 'local-1', completed: false },
+                { id: uid(), title: 'Configurar envio de e-mail', tag: 'urgente', date: formatDate(new Date()), colId: 'local-1', completed: false },
                 { id: uid(), title: 'Integrar backend com notification-service', tag: 'backend', date: '2025-06-08', colId: 'local-2', completed: false },
                 { id: uid(), title: 'Criar tela de login e cadastro', tag: 'frontend', date: '2025-06-09', colId: 'local-2', completed: false },
             ];
@@ -235,7 +249,7 @@ async function deleteColumn(colId) {
         const res = await apiFetch(`/columns/${colId}`, { method: 'DELETE' });
         if (!res || !res.ok) return;
         state.columns = state.columns.filter(c => !colIdEq(c.id, colId));
-        state.tasks   = state.tasks.filter(t => !colIdEq(t.colId, colId));
+        state.tasks = state.tasks.filter(t => !colIdEq(t.colId, colId));
         delete state.colMeta[String(colId)];
         updateColSelect(); saveState(); render();
     } catch { }
@@ -267,7 +281,7 @@ function showModeConfirm(title, desc, confirmLabel, onConfirm) {
     const overlay = document.getElementById('modal-mode-confirm');
     if (!overlay) return;
     overlay.querySelector('.mode-confirm-title').textContent = title;
-    overlay.querySelector('.mode-confirm-desc').textContent  = desc;
+    overlay.querySelector('.mode-confirm-desc').textContent = desc;
     const btn = overlay.querySelector('.mode-confirm-btn');
     btn.textContent = confirmLabel;
     btn.onclick = () => { overlay.classList.add('hidden'); onConfirm(); };
@@ -292,6 +306,7 @@ function render() {
     addBtn.className = 'add-column-btn';
     addBtn.innerHTML = `<button onclick="addColumn()">+ Adicionar coluna</button>`;
     board.appendChild(addBtn);
+    initSortable();
 }
 
 function buildColumn(col, tasks) {
@@ -301,9 +316,9 @@ function buildColumn(col, tasks) {
     wrap.dataset.colId = col.id;
 
     const cover = document.createElement('div');
-    cover.className        = 'col-cover';
+    cover.className = 'col-cover';
     cover.style.background = col.color;
-    cover.innerHTML        = `<div class="col-cover-edit-hint">✏ Editar coluna</div>`;
+    cover.innerHTML = `<div class="col-cover-edit-hint">✏ Editar coluna</div>`;
     cover.addEventListener('click', () => openColEditPanel(col.id));
     wrap.appendChild(cover);
 
@@ -315,11 +330,11 @@ function buildColumn(col, tasks) {
     const inp = document.createElement('input');
     inp.className = 'col-name-input';
     inp.value = col.name;
-    inp.addEventListener('blur',    () => saveColumnName(col.id, inp.value));
+    inp.addEventListener('blur', () => saveColumnName(col.id, inp.value));
     inp.addEventListener('keydown', e => { if (e.key === 'Enter') inp.blur(); });
 
     const count = document.createElement('span');
-    count.className   = 'col-count';
+    count.className = 'col-count';
     count.textContent = tasks.length;
 
     left.appendChild(inp);
@@ -346,7 +361,7 @@ function buildColumn(col, tasks) {
     wrap.appendChild(cardsList);
 
     const addBtn = document.createElement('button');
-    addBtn.className   = 'add-card-btn';
+    addBtn.className = 'add-card-btn';
     addBtn.textContent = '+ Adicionar tarefa';
     addBtn.addEventListener('click', () => openModal(col.id));
     wrap.appendChild(addBtn);
@@ -367,7 +382,7 @@ function buildCard(task, col, meta) {
         : '';
 
     const tagClass = tagStyle(task.tag);
-    const dateStr  = task.date
+    const dateStr = task.date
         ? `<div class="card-date">📅 ${formatDisplay(task.date)} ${deadlineBadge(task.date)}</div>`
         : '';
 
@@ -406,10 +421,10 @@ function buildCard(task, col, meta) {
    CHECKLIST
 ══════════════════════════════════════════════════ */
 function buildChecklist(task) {
-    const items   = getTaskChecklist(task.id);
-    const total   = items.length;
-    const done    = items.filter(i => i.checked).length;
-    const pct     = total > 0 ? Math.round((done / total) * 100) : 0;
+    const items = getTaskChecklist(task.id);
+    const total = items.length;
+    const done = items.filter(i => i.checked).length;
+    const pct = total > 0 ? Math.round((done / total) * 100) : 0;
     const allDone = total > 0 && done === total;
 
     const wrap = document.createElement('div');
@@ -579,12 +594,12 @@ function openColEditPanel(colId) {
 }
 
 function syncFinishRowState() {
-    const row    = document.getElementById('col-edit-finish-row');
+    const row = document.getElementById('col-edit-finish-row');
     const toggle = document.getElementById('col-edit-finish-toggle');
     if (!row || !toggle) return;
     const isCheckbox = state.completionMode === 'checkbox';
-    row.style.opacity       = isCheckbox ? '0.4' : '1';
-    row.style.cursor        = isCheckbox ? 'not-allowed' : 'pointer';
+    row.style.opacity = isCheckbox ? '0.4' : '1';
+    row.style.cursor = isCheckbox ? 'not-allowed' : 'pointer';
     row.style.pointerEvents = isCheckbox ? 'none' : 'auto';
     if (isCheckbox) toggle.classList.remove('on');
     document.querySelectorAll('.col-edit-mode-btn').forEach((btn, i) => {
@@ -645,8 +660,8 @@ function removeTagFromCol(index) {
 
 async function colEditSave() {
     if (editingColId === null) return;
-    const name     = document.getElementById('col-edit-name').value.trim() || 'Sem nome';
-    const color    = document.getElementById('col-edit-preview').style.background;
+    const name = document.getElementById('col-edit-name').value.trim() || 'Sem nome';
+    const color = document.getElementById('col-edit-preview').style.background;
     const finished = document.getElementById('col-edit-finish-toggle').classList.contains('on');
     await saveColumnFull(editingColId, name, color, finished);
     closeColEditPanel();
@@ -658,16 +673,16 @@ function colEditDelete() {
     if (editingColId === null) return;
     _deletingColIdDash = editingColId;
 
-    const col        = state.columns.find(c => colIdEq(c.id, editingColId));
-    const colTasks   = state.tasks.filter(t => colIdEq(t.colId, editingColId)).length;
-    const descEl     = document.getElementById('modal-delete-col-dash-desc');
+    const col = state.columns.find(c => colIdEq(c.id, editingColId));
+    const colTasks = state.tasks.filter(t => colIdEq(t.colId, editingColId)).length;
+    const descEl = document.getElementById('modal-delete-col-dash-desc');
     const confirmBtn = document.getElementById('btn-confirm-delete-col-dash');
 
     if (colTasks > 0) {
-        descEl.textContent       = `A coluna "${col?.name}" tem ${colTasks} tarefa(s). Mova ou remova as tarefas antes de deletar.`;
+        descEl.textContent = `A coluna "${col?.name}" tem ${colTasks} tarefa(s). Mova ou remova as tarefas antes de deletar.`;
         confirmBtn.style.display = 'none';
     } else {
-        descEl.textContent       = `Tem certeza que deseja remover a coluna "${col?.name}"? Esta ação é irreversível.`;
+        descEl.textContent = `Tem certeza que deseja remover a coluna "${col?.name}"? Esta ação é irreversível.`;
         confirmBtn.style.display = '';
     }
 
@@ -778,15 +793,15 @@ function injectTaskModal() {
 ══════════════════════════════════════════════════ */
 function openModal(colId = null, editId = null) {
     state.targetColId = normalizeColId(colId ?? state.columns[0]?.id ?? null);
-    state.editingId   = editId;
+    state.editingId = editId;
 
-    const inp     = document.getElementById('task-title');
-    const desc    = document.getElementById('task-desc');
-    const tagSel  = document.getElementById('task-tag');
+    const inp = document.getElementById('task-title');
+    const desc = document.getElementById('task-desc');
+    const tagSel = document.getElementById('task-tag');
     const dateSel = document.getElementById('task-date');
-    const colSel  = document.getElementById('task-col');
-    const err     = document.getElementById('error-msg');
-    const tplRow  = document.getElementById('template-row');
+    const colSel = document.getElementById('task-col');
+    const err = document.getElementById('error-msg');
+    const tplRow = document.getElementById('template-row');
 
     err.classList.remove('visible');
     if (tplRow) tplRow.style.display = editId ? 'none' : 'flex';
@@ -797,27 +812,27 @@ function openModal(colId = null, editId = null) {
         : state.targetColId;
     const currentCol = state.columns.find(c => colIdEq(c.id, currentColId));
 
-    const stripe   = document.getElementById('modal-task-stripe');
+    const stripe = document.getElementById('modal-task-stripe');
     const colLabel = document.getElementById('modal-task-col-label');
-    if (stripe)   stripe.style.background = currentCol?.color || '#0065FF';
-    if (colLabel) colLabel.textContent     = currentCol?.name || '';
+    if (stripe) stripe.style.background = currentCol?.color || '#0065FF';
+    if (colLabel) colLabel.textContent = currentCol?.name || '';
 
     if (editId) {
         const task = state.tasks.find(t => t.id === editId);
         if (!task) return;
-        inp.value     = task.title;
-        desc.value    = task.desc || '';
-        tagSel.value  = task.tag;
+        inp.value = task.title;
+        desc.value = task.desc || '';
+        tagSel.value = task.tag;
         dateSel.value = task.date || '';
         // Seleciona a option pelo value (que é c.id como string no DOM)
-        colSel.value  = String(task.colId);
-        document.getElementById('save-label').textContent               = 'Salvar alterações';
+        colSel.value = String(task.colId);
+        document.getElementById('save-label').textContent = 'Salvar alterações';
         document.getElementById('modal-task-title-display').textContent = task.title;
     } else {
         inp.value = desc.value = dateSel.value = '';
         tagSel.value = 'frontend';
         colSel.value = String(state.targetColId);
-        document.getElementById('save-label').textContent               = 'Salvar tarefa';
+        document.getElementById('save-label').textContent = 'Salvar tarefa';
         document.getElementById('modal-task-title-display').textContent = 'Nova tarefa';
     }
 
@@ -826,12 +841,12 @@ function openModal(colId = null, editId = null) {
     };
     colSel.onchange = () => {
         const sel = state.columns.find(c => colIdEq(c.id, colSel.value));
-        if (stripe && sel)   stripe.style.background = sel.color;
-        if (colLabel && sel) colLabel.textContent     = sel.name;
+        if (stripe && sel) stripe.style.background = sel.color;
+        if (colLabel && sel) colLabel.textContent = sel.name;
     };
 
     try {
-        const u  = JSON.parse(localStorage.getItem('user'));
+        const u = JSON.parse(localStorage.getItem('user'));
         const av = document.getElementById('task-comment-avatar');
         if (av && u?.name) av.textContent = u.name.split(' ').slice(0, 2).map(w => w[0].toUpperCase()).join('');
     } catch (_) { }
@@ -851,14 +866,14 @@ function handleOverlayClick(e) {
 }
 
 function saveTask() {
-    const inp     = document.getElementById('task-title');
-    const desc    = document.getElementById('task-desc');
-    const tagSel  = document.getElementById('task-tag');
+    const inp = document.getElementById('task-title');
+    const desc = document.getElementById('task-desc');
+    const tagSel = document.getElementById('task-tag');
     const dateSel = document.getElementById('task-date');
-    const colSel  = document.getElementById('task-col');
-    const err     = document.getElementById('error-msg');
-    const btn     = document.getElementById('btn-save');
-    const label   = document.getElementById('save-label');
+    const colSel = document.getElementById('task-col');
+    const err = document.getElementById('error-msg');
+    const btn = document.getElementById('btn-save');
+    const label = document.getElementById('save-label');
     const spinner = document.getElementById('save-spinner');
 
     const titleVal = inp.value.trim();
@@ -868,17 +883,17 @@ function saveTask() {
 
     setTimeout(() => {
         const selectedColId = normalizeColId(colSel.value);
-        const destCol       = state.columns.find(c => colIdEq(c.id, selectedColId));
-        const isFinished    = destCol?.isFinished === true && state.completionMode === 'column';
+        const destCol = state.columns.find(c => colIdEq(c.id, selectedColId));
+        const isFinished = destCol?.isFinished === true && state.completionMode === 'column';
 
         if (state.editingId) {
             const task = state.tasks.find(t => t.id === state.editingId);
             if (task) {
-                task.title     = titleVal;
-                task.desc      = desc.value.trim();
-                task.tag       = tagSel.value;
-                task.date      = dateSel.value;
-                task.colId     = selectedColId;
+                task.title = titleVal;
+                task.desc = desc.value.trim();
+                task.tag = tagSel.value;
+                task.date = dateSel.value;
+                task.colId = selectedColId;
                 task.completed = isFinished;
             }
         } else {
@@ -920,7 +935,7 @@ function submitTaskComment() {
     const taskId = state.editingId;
     if (!taskId) return;
     const input = document.getElementById('task-comment-input');
-    const text  = input.value.trim();
+    const text = input.value.trim();
     if (!text) return;
     let name = 'Você', color = '#0052CC';
     try {
@@ -950,9 +965,9 @@ function moveTask(id, newColId) {
     const task = state.tasks.find(t => t.id === id);
     if (!task) return;
     const normalizedId = normalizeColId(newColId);
-    const destCol      = state.columns.find(c => colIdEq(c.id, normalizedId));
-    const isFinished   = destCol?.isFinished === true && state.completionMode === 'column';
-    task.colId     = normalizedId;
+    const destCol = state.columns.find(c => colIdEq(c.id, normalizedId));
+    const isFinished = destCol?.isFinished === true && state.completionMode === 'column';
+    task.colId = normalizedId;
     task.completed = isFinished;
     saveState(); render();
 }
@@ -970,7 +985,7 @@ function toggleColMenu(btn) {
     const isOpen = !menu.classList.contains('hidden');
     closeColMenus(); if (!isOpen) menu.classList.remove('hidden');
 }
-function closeColMenus()  { document.querySelectorAll('.col-options-menu').forEach(m => m.classList.add('hidden')); }
+function closeColMenus() { document.querySelectorAll('.col-options-menu').forEach(m => m.classList.add('hidden')); }
 function toggleMoveMenu(btn) {
     const menu = btn.nextElementSibling;
     const isOpen = !menu.classList.contains('hidden');
@@ -983,19 +998,19 @@ document.addEventListener('click', () => { closeColMenus(); closeMoveMenus(); })
    TEMPLATES
 ══════════════════════════════════════════════════ */
 const TEMPLATES = {
-    bug:      { title: '[Bug] ',      desc: 'Passos para reproduzir:\n1. \n\nComportamento esperado:\n\nComportamento atual:\n', tag: 'urgente' },
-    feature:  { title: '[Feature] ',  desc: 'Descrição da funcionalidade:\n\nCritérios de aceite:\n- [ ] \n', tag: 'frontend' },
-    reuniao:  { title: '[Reunião] ',  desc: 'Pauta:\n- \n\nParticipantes:\n- \n\nDecisões:\n- ', tag: 'design' },
+    bug: { title: '[Bug] ', desc: 'Passos para reproduzir:\n1. \n\nComportamento esperado:\n\nComportamento atual:\n', tag: 'urgente' },
+    feature: { title: '[Feature] ', desc: 'Descrição da funcionalidade:\n\nCritérios de aceite:\n- [ ] \n', tag: 'frontend' },
+    reuniao: { title: '[Reunião] ', desc: 'Pauta:\n- \n\nParticipantes:\n- \n\nDecisões:\n- ', tag: 'design' },
     melhoria: { title: '[Melhoria] ', desc: 'O que melhorar:\n\nMotivação:\n\nImpacto esperado:\n', tag: 'backend' },
-    docs:     { title: '[Docs] ',     desc: 'O que documentar:\n\nAudiência:\n\nFormato: ', tag: 'devops' },
+    docs: { title: '[Docs] ', desc: 'O que documentar:\n\nAudiência:\n\nFormato: ', tag: 'devops' },
 };
 
 function applyTemplate(key) {
     const tpl = TEMPLATES[key];
     if (!tpl) return;
     document.getElementById('task-title').value = tpl.title;
-    document.getElementById('task-desc').value  = tpl.desc;
-    document.getElementById('task-tag').value   = tpl.tag;
+    document.getElementById('task-desc').value = tpl.desc;
+    document.getElementById('task-tag').value = tpl.tag;
     document.getElementById('modal-task-title-display').textContent = tpl.title;
     document.getElementById('task-title').focus();
     document.querySelectorAll('.tpl-btn').forEach(b => b.classList.remove('active'));
@@ -1008,12 +1023,12 @@ function applyTemplate(key) {
 function deadlineBadge(dateStr) {
     if (!dateStr) return '';
     const today = new Date(); today.setHours(0, 0, 0, 0);
-    const due   = new Date(dateStr + 'T00:00:00');
-    const diff  = Math.floor((due - today) / 86400000);
-    if (diff < 0)   return `<span class="deadline-badge overdue">Em atraso</span>`;
+    const due = new Date(dateStr + 'T00:00:00');
+    const diff = Math.floor((due - today) / 86400000);
+    if (diff < 0) return `<span class="deadline-badge overdue">Em atraso</span>`;
     if (diff === 0) return `<span class="deadline-badge today">Vence hoje</span>`;
     if (diff === 1) return `<span class="deadline-badge soon">Vence amanhã</span>`;
-    if (diff <= 3)  return `<span class="deadline-badge soon">${diff} dias</span>`;
+    if (diff <= 3) return `<span class="deadline-badge soon">${diff} dias</span>`;
     return `<span class="deadline-badge ok">No prazo</span>`;
 }
 
@@ -1025,11 +1040,11 @@ function setActiveNav(el) {
     el.classList.add('active');
 }
 function handleLogout() { document.getElementById('logout-overlay').classList.remove('hidden'); }
-function closeLogout()   { document.getElementById('logout-overlay').classList.add('hidden'); }
+function closeLogout() { document.getElementById('logout-overlay').classList.add('hidden'); }
 function confirmLogout() {
-    const label   = document.getElementById('logout-label');
+    const label = document.getElementById('logout-label');
     const spinner = document.getElementById('logout-spinner');
-    const btn     = document.querySelector('.btn-logout-confirm');
+    const btn = document.querySelector('.btn-logout-confirm');
     btn.disabled = true; label.textContent = 'Saindo…'; spinner.classList.remove('hidden');
     setTimeout(() => { localStorage.removeItem('token'); localStorage.removeItem('user'); window.location.href = 'index.html'; }, 900);
 }
@@ -1061,10 +1076,10 @@ document.addEventListener('keydown', e => {
 /* ══════════════════════════════════════════════════
    HELPERS
 ══════════════════════════════════════════════════ */
-function uid()           { return Date.now().toString(36) + Math.random().toString(36).slice(2, 7); }
-function escHtml(str)    { return String(str).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;'); }
+function uid() { return Date.now().toString(36) + Math.random().toString(36).slice(2, 7); }
+function escHtml(str) { return String(str).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;'); }
 function capitalise(str) { return str.charAt(0).toUpperCase() + str.slice(1); }
-function formatDate(d)   { return d.toISOString().split('T')[0]; }
+function formatDate(d) { return d.toISOString().split('T')[0]; }
 function formatDisplay(iso) {
     if (!iso) return '';
     const [y, m, day] = iso.split('-');
@@ -1080,4 +1095,103 @@ function toast(msg, type = '') {
     t.className = `toast ${type}`; t.textContent = msg;
     document.body.appendChild(t);
     setTimeout(() => t.remove(), 3000);
+}
+
+/* ══════════════════════════════════════════════════
+   DRAG AND DROP — SortableJS
+══════════════════════════════════════════════════ */
+let _colSortable = null;
+const _cardSortables = [];
+
+function initSortable() {
+    const board = document.getElementById('kanban-board');
+    if (!board) return;
+
+    // Destroy instâncias anteriores
+    if (_colSortable) _colSortable.destroy();
+    _cardSortables.forEach(s => s.destroy());
+    _cardSortables.length = 0;
+
+    // Drag de colunas — arrasta pela capa (col-cover)
+    _colSortable = Sortable.create(board, {
+        animation: 150,
+        handle: '.col-cover',
+        draggable: '.column',
+        ghostClass: 'sortable-ghost',
+        chosenClass: 'sortable-chosen',
+        dragClass: 'sortable-drag',
+        filter: '.add-column-btn',
+        onEnd(evt) {
+            const { oldIndex, newIndex } = evt;
+            if (oldIndex === newIndex) return;
+
+            // Reordena state.columns excluindo o botão add (último elemento)
+            const cols = [...state.columns];
+            const [moved] = cols.splice(oldIndex, 1);
+            cols.splice(newIndex, 0, moved);
+            state.columns = cols;
+
+            // Persiste posição
+            state.columns.forEach((c, i) => { c.position = i; });
+            saveState();
+
+            // Sincroniza posição com API (best-effort)
+            state.columns.forEach(c => {
+                apiFetch(`/columns/${c.id}`, {
+                    method: 'PUT',
+                    body: JSON.stringify({ name: c.name, color: c.color, position: c.position, isFinished: c.isFinished })
+                }).catch(() => { });
+            });
+
+            updateColSelect();
+        }
+    });
+
+    // Drag de cards entre colunas
+    board.querySelectorAll('.cards-list').forEach(list => {
+        const colEl = list.closest('.column');
+        const colId = normalizeColId(colEl?.dataset.colId);
+
+        const sortable = Sortable.create(list, {
+            animation: 150,
+            group: 'cards',
+            draggable: '.card',
+            ghostClass: 'sortable-ghost',
+            chosenClass: 'sortable-chosen',
+            dragClass: 'sortable-drag',
+            onEnd(evt) {
+                // Remove empty-state da coluna de destino
+                evt.to.querySelector('.empty-state')?.remove();
+
+                // Adiciona empty-state na coluna de origem se ficou vazia
+                if (evt.from !== evt.to && evt.from.querySelectorAll('.card').length === 0) {
+                    const empty = document.createElement('div');
+                    empty.className = 'empty-state';
+                    empty.textContent = 'Nenhuma tarefa aqui.';
+                    evt.from.insertBefore(empty, evt.from.querySelector('.add-card-btn'));
+                }
+
+                const taskId = evt.item.dataset.id;
+                const toColEl = evt.to.closest('.column');
+                const toColId = normalizeColId(toColEl?.dataset.colId);
+                if (!taskId || toColId === null) return;
+
+                const task = state.tasks.find(t => t.id === taskId);
+                const destCol = state.columns.find(c => colIdEq(c.id, toColId));
+                if (!task || !destCol) return;
+
+                task.colId = toColId;
+                task.completed = destCol.isFinished === true && state.completionMode === 'column';
+                saveState();
+
+                // Atualiza contadores
+                board.querySelectorAll('.column').forEach(col => {
+                    const cid = normalizeColId(col.dataset.colId);
+                    const count = col.querySelector('.col-count');
+                    if (count) count.textContent = state.tasks.filter(t => colIdEq(t.colId, cid)).length;
+                });
+            }
+        });
+        _cardSortables.push(sortable);
+    });
 }
