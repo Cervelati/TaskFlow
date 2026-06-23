@@ -9,9 +9,9 @@
 
 ## Sobre o Projeto
 
-O **TaskFlow** é um sistema de gerenciamento de tarefas desenvolvido como projeto de portfólio e trabalho de conclusão de curso. O objetivo é construir uma aplicação real, escalável e bem documentada, que possa ser utilizada tanto para organização pessoal quanto em contextos empresariais e didáticos.
+O **TaskFlow** é um sistema de gerenciamento de tarefas desenvolvido como projeto de portfólio e trabalho de conclusão de curso. O objetivo é construir uma aplicação real, escalável e bem documentada, que possa ser utilizada tanto para organização pessoal quanto em contextos empresariais.
 
-O projeto foi pensado para crescer aos poucos, com cada funcionalidade sendo implementada, testada e documentada de forma incremental.
+O projeto foi pensado para crescer incrementalmente, com cada funcionalidade sendo implementada, testada e documentada de forma rigorosa.
 
 ---
 
@@ -22,7 +22,7 @@ O sistema é dividido em serviços independentes, orquestrados via Docker:
 ```
 TaskFlow/
 ├── frontend/             # Interface web (HTML, CSS, JavaScript)
-├── backend-api/          # API REST (C# ASP.NET Core)
+├── backend-api/          # API REST (C# ASP.NET Core 9)
 ├── notification-service/ # Serviço de notificações (Java Spring Boot)
 ├── docker-compose.yml    # Orquestração dos serviços
 └── README.md
@@ -34,12 +34,12 @@ TaskFlow/
 
 | Camada | Tecnologia |
 |---|---|
-| Frontend | HTML5, CSS3, JavaScript |
-| Backend | C# ASP.NET Core 9 |
+| Frontend | HTML5, CSS3, JavaScript (vanilla) |
+| Backend | C# ASP.NET Core 9, Entity Framework Core |
 | Autenticação | JWT (JSON Web Tokens) |
 | Notificações | Java 21 + Spring Boot + Maven |
 | Banco de dados | PostgreSQL 16 |
-| Documentação | Swagger / OpenAPI |
+| UI/UX | SortableJS (drag-and-drop) |
 | Infraestrutura | Docker + Docker Compose |
 | Versionamento | Git + GitHub |
 
@@ -47,17 +47,41 @@ TaskFlow/
 
 ## Funcionalidades
 
+### ✅ Implementadas
+
 - [x] Autenticação de usuários (cadastro e login com JWT)
-- [x] CRUD completo de tarefas
+- [x] CRUD completo de tarefas (pessoais e em workspaces)
 - [x] Proteção de rotas por autenticação
-- [x] Documentação da API com Swagger
+- [x] Dashboard pessoal ("Meu Board") com localStorage
+- [x] Workspaces colaborativos com sincronização via API
+- [x] Colunas customizáveis (nome, cor, ordem)
+- [x] **Drag-and-drop** de colunas e cards (SortableJS)
+- [x] Tags e filtros de tarefas
+- [x] Visualização de tarefas por status (Todas, Urgentes, Vencendo hoje, Pendentes, Concluídas)
+- [x] Modal customizado de exclusão com validação
+- [x] Comentários em tarefas
+- [x] Checklists dentro de tarefas
+- [x] Modo de conclusão (por coluna ou checklist)
+- [x] Página de tarefas consolidada (pessoais + workspaces)
+- [x] Sincronização automática com API
 - [x] Banco de dados PostgreSQL com migrations
-- [x] Orquestração completa via Docker Compose
-- [ ] Atribuição de tarefas a usuários
-- [ ] Prioridade e status de tarefas (pendente, em andamento, concluído)
-- [ ] Notificações de prazo e atualizações
-- [ ] Dashboard com visão geral das tarefas
-- [ ] Filtros e busca
+- [x] Documentação da API com Swagger
+
+### 🔄 Em desenvolvimento
+
+- [ ] Atribuição de tarefas a usuários específicos
+- [ ] Notificações em tempo real (WebSocket)
+- [ ] Sistema de permissões detalhado (Owner, Admin, Member, Viewer)
+- [ ] Histórico de alterações e auditoria
+- [ ] Integração com calendário (iCal)
+- [ ] Templates de projetos
+
+### 📋 Planejado
+
+- [ ] Relatórios e análises
+- [ ] Integração com serviços externos (Slack, Gmail, etc)
+- [ ] Aplicativo mobile (React Native)
+- [ ] Sistema de subscrições e planos
 
 ---
 
@@ -117,7 +141,71 @@ docker compose up
 | PUT | `/api/tasks/{id}` | Atualizar tarefa |
 | DELETE | `/api/tasks/{id}` | Remover tarefa |
 
+### Colunas (requer autenticação)
+
+| Método | Rota | Descrição |
+|---|---|---|
+| GET | `/api/columns` | Listar colunas (pessoais ou do workspace) |
+| GET | `/api/columns/{id}` | Buscar coluna por ID |
+| POST | `/api/columns` | Criar nova coluna |
+| PUT | `/api/columns/{id}` | Atualizar coluna (nome, cor, posição) |
+| DELETE | `/api/columns/{id}` | Remover coluna |
+
+### Workspaces (requer autenticação)
+
+| Método | Rota | Descrição |
+|---|---|---|
+| GET | `/api/workspaces` | Listar workspaces do usuário |
+| POST | `/api/workspaces` | Criar novo workspace |
+| PUT | `/api/workspaces/{id}` | Atualizar workspace |
+| DELETE | `/api/workspaces/{id}` | Remover workspace |
+
 > Para testar os endpoints autenticados, acesse o Swagger em `http://localhost:5000/swagger/index.html`, faça login e clique em **Authorize** para inserir o token JWT.
+
+---
+
+## Estrutura de Dados
+
+### Task
+
+```json
+{
+  "id": 1,
+  "title": "Implementar autenticação",
+  "description": "Adicionar JWT ao backend",
+  "columnId": 1,
+  "workspaceId": null,
+  "status": "Em andamento",
+  "isCompleted": false,
+  "dueDate": "2025-06-30",
+  "createdAt": "2025-06-18T12:31:38Z"
+}
+```
+
+### Column
+
+```json
+{
+  "id": 1,
+  "name": "A fazer",
+  "color": "#0065FF",
+  "position": 0,
+  "workspaceId": null,
+  "isFinished": false
+}
+```
+
+### Workspace
+
+```json
+{
+  "id": 1,
+  "name": "Projeto X",
+  "description": "Desenvolvimento do novo sistema",
+  "ownerId": 1,
+  "createdAt": "2025-06-15T10:20:00Z"
+}
+```
 
 ---
 
@@ -134,16 +222,44 @@ JWT_KEY=sua_chave_secreta_com_minimo_32_caracteres
 
 ---
 
+## Recursos Recentes
+
+### v0.3.0 (Junho 2025)
+
+- ✨ **Drag-and-drop** de colunas e cards usando SortableJS
+- 🔧 Migração de referências de coluna de nome para ID (normalização)
+- 🐛 Correção de sincronização entre localStorage e API
+- 🎨 Modal customizado de exclusão com validação
+- ⚡ Atualização visual imediata sem re-render completo
+
+### v0.2.0 (Junho 2025)
+
+- 📊 Dashboard pessoal com localStorage
+- 🏢 Workspaces colaborativos
+- 💬 Comentários em tarefas
+- ☑️ Checklists dentro de tarefas
+- 📋 Página consolidada de tarefas
+
+### v0.1.0 (Junho 2025)
+
+- 🔐 Autenticação com JWT
+- ✅ CRUD de tarefas
+- 📚 Documentação com Swagger
+
+---
+
 ## Contexto Acadêmico
 
-Este projeto também compõe o Trabalho de Conclusão de Curso, com foco em demonstrar na prática conceitos de:
+Este projeto compõe o Trabalho de Conclusão de Curso (TCC), com foco em demonstrar na prática:
 
-- Arquitetura de microsserviços
-- Desenvolvimento de APIs REST
+- Arquitetura de microsserviços e monolito com múltiplas camadas
+- Desenvolvimento de APIs REST profissionais
 - Autenticação segura com JWT
 - Conteinerização com Docker
-- Integração entre serviços com tecnologias diferentes (C# e Java)
-- Boas práticas de versionamento com Git
+- Integração entre serviços heterogêneos (C# e Java)
+- Boas práticas de Git e versionamento
+- UI/UX com interações fluidas (drag-and-drop)
+- Synchronization e conflito de estado entre frontend e backend
 
 ---
 
