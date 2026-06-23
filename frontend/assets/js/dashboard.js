@@ -42,9 +42,9 @@ let state = {
     loadUserInfo();
     refreshUrgentBadges();
 
-    await loadColumns();
     injectColEditPanel();
     injectTaskModal();
+    await loadColumns();
 })();
 
 /* ══════════════════════════════════════════════════
@@ -972,9 +972,15 @@ function moveTask(id, newColId) {
     saveState(); render();
 }
 
-function deleteTask(id) {
+async function deleteTask(id) {
     state.tasks = state.tasks.filter(t => t.id !== id);
     saveState(); render();
+
+    // Tenta deletar também na API, caso a tarefa exista lá
+    // (resíduo de tarefas criadas antes da migração para localStorage)
+    try {
+        await apiFetch(`/tasks/${id}`, { method: 'DELETE' });
+    } catch (_) { }
 }
 
 /* ══════════════════════════════════════════════════
@@ -1160,15 +1166,15 @@ function initSortable() {
             chosenClass: 'sortable-chosen',
             dragClass: 'sortable-drag',
             onEnd(evt) {
-                // Remove empty-state da coluna de destino
+                
                 evt.to.querySelector('.empty-state')?.remove();
 
-                // Adiciona empty-state na coluna de origem se ficou vazia
+                
                 if (evt.from !== evt.to && evt.from.querySelectorAll('.card').length === 0) {
                     const empty = document.createElement('div');
                     empty.className = 'empty-state';
                     empty.textContent = 'Nenhuma tarefa aqui.';
-                    evt.from.insertBefore(empty, evt.from.querySelector('.add-card-btn'));
+                    evt.from.appendChild(empty);
                 }
 
                 const taskId = evt.item.dataset.id;
@@ -1184,7 +1190,12 @@ function initSortable() {
                 task.completed = destCol.isFinished === true && state.completionMode === 'column';
                 saveState();
 
-                // Atualiza contadores
+                
+                evt.item.classList.toggle('card-completed', task.completed);
+                const titleEl = evt.item.querySelector('.card-title');
+                if (titleEl) titleEl.classList.toggle('card-title-done', task.completed);
+
+                
                 board.querySelectorAll('.column').forEach(col => {
                     const cid = normalizeColId(col.dataset.colId);
                     const count = col.querySelector('.col-count');
